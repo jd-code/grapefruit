@@ -9,6 +9,15 @@ using namespace grapefruit ;
 namespace grapefruit
 {
 
+// ------------------------- ActionTest -----------------------------------------------------------
+//
+
+const string & ActionTest::getacname (void)
+{
+static string name("ActionTest");
+    return name;
+}
+    
 // ------------------------- TDMenuItem -----------------------------------------------------------
 //
 

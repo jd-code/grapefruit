@@ -53,9 +53,17 @@ namespace grapefruit
      static long n_occur;		    //!< global counter for Actions' handles creations.
 	    long handle;		    //!< the "unique-in-history" handle matching the Action.
 	public:
+
 	    virtual ~Action (void);
 	    Action (void);
 	    virtual void doit (void) = 0;   //!< the virtual action-code to be performed, by itself.
+
+	    virtual const string & getacname (void);
+	    static void dump_mactions (ostream &cout);
+	    long gethandle (void)
+		{   return handle;
+		}
+
 	friend class ActionPool;
     };
 
@@ -67,19 +75,21 @@ namespace grapefruit
     class ActionPool
     {
 	private:
-	    list<long> l;				//!< the list of Action to trigger.
+	    list<long> l;				    //!< the list of Action to trigger.
 	public:
-     static bool warnaboutmissingActions;		//!< must we warn about attempt to use Action that were deleted (default yes)
+     static bool warnaboutmissingActions;		    //!< must we warn about attempt to use Action that were deleted (default yes)
+     static bool debug_pool;				    //!< do we have the debuging of ActionPool performed at each "doit" call ?
 	    ActionPool (void) {}
-	    void doit (void);				//!< carefully checks each Action existence before triggering them.
-	    ~ActionPool (void) {}
-	    ActionPool & operator += (const Action & a);	//!< adds an Action at the end of the pool.
+	    void doit (void);				    //!< carefully checks each Action existence before triggering them.
+	    ~ActionPool (void) {}			    //!< naturally performs each Action one after the other
+	    ActionPool & operator += (const Action & a);    //!< adds an Action at the end of the pool.
     };
 
 #ifdef GRAPEKEY_H_GLOBINST
 	GRAPEFRUIT_H_SCOPE map<long, Action *> Action::mactions;
 	GRAPEFRUIT_H_SCOPE long Action::n_occur = 0;
 	GRAPEFRUIT_H_SCOPE bool ActionPool::warnaboutmissingActions = true;
+	GRAPEFRUIT_H_SCOPE bool ActionPool::debug_pool = false;
 #endif // GRAPEKEY_H_GLOBINST
     
     // --------------- GrapeKeyMapKey ---------------------------------------------
