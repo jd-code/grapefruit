@@ -267,7 +267,7 @@ namespace grapefruit
 
     // ----------------------------- TDObjSHable ---------------------------------------------------
     //
-    // Delivers hide and show actions for any TDObj
+    // Delivers hide, show and toggle actions for any TDObj
     //
 
     //! Action for hiding and desactivating some TDObj
@@ -305,6 +305,29 @@ namespace grapefruit
 		}
     };
 
+    //! Action for toggling some TDObj
+
+    class ACTDToggle : public Action
+    {
+	    TDObj * ptd;
+	public:
+	    ACTDToggle (TDObj * p)
+		{   ptd = p;
+		}
+
+	    virtual void doit (void)
+		{   if (ptd->isshown ()) {
+			if (ptd->isactivated ())
+			    ptd->desactivate ();
+			ptd->hide ();
+		    } else {
+			ptd->show ();
+			if (!ptd->isactivated ())
+			    ptd->activate ();
+		    }
+		}
+    };
+
     // ----------------------------- TDObjSHable ---------------------------------------------------
     //
     //! Delivers hide and show actions for any TDObj
@@ -314,14 +337,17 @@ namespace grapefruit
     {	
 	    ACTDHide * pactdhide;
 	    ACTDShow * pactdshow;
+	    ACTDToggle * pactdtoggle;
 	public:
 	    TDObjSHable (void)
 		{   pactdhide = NULL;
 		    pactdshow = NULL;
+		    pactdtoggle = NULL;
 		}
 	    ~TDObjSHable (void)
 		{   if (pactdhide != NULL) delete (pactdhide);
 		    if (pactdshow != NULL) delete (pactdshow);
+		    if (pactdtoggle != NULL) delete (pactdtoggle);
 		}
 	    //! returns the Action that hides and desactivates the TD
 	    Action * getactdhide (void)
@@ -334,6 +360,12 @@ namespace grapefruit
 		{   if (pactdshow == NULL)
 			pactdshow = new ACTDShow (this);
 		    return pactdshow;
+		}
+	    //! returns the action that toggles the TD
+	    Action * getactdtoggle (void)
+		{   if (pactdtoggle == NULL)
+			pactdtoggle = new ACTDToggle (this);
+		    return pactdtoggle;
 		}
     };
     
