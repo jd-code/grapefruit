@@ -1,5 +1,5 @@
 /* 
- * $Id: jeuchar.h,v 1.1 2003/04/22 14:04:34 jd Exp $
+ * $Id$
  * GrapeFruit Copyright (C) 2002,2003 Cristelle Barillon & Jean-Daniel Pauget
  * a whole set of graphical utilities for SDL
  *

@@ -1,5 +1,5 @@
 /* 
- * $Id: tdstring.cpp,v 1.1 2004/01/20 15:41:53 jd Exp $
+ * $Id$
  * GrapeFruit Copyright (C) 2002,2003 Cristelle Barillon & Jean-Daniel Pauget
  * a whole set of graphical utilities for SDL
  *
