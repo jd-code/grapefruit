@@ -49,6 +49,7 @@ namespace grapefruit
 	    int nbclick;
 	    bool doreport;
 	public:
+	    virtual ~ActionTest (void) {}
 	    ActionTest (bool doreport = false)
 		{	nbclick = 0;
 		    ActionTest::doreport = doreport;
@@ -59,6 +60,7 @@ namespace grapefruit
 			bzouzerr << "Action!!! (" << nbclick << ")" << endl ;
 		    nbclick ++;
 		}
+	    virtual const string & getacname (void);
     };
 
     class TDMenu ;

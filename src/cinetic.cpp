@@ -3,6 +3,9 @@
 
 namespace grapefruit
 {
+
+    // ----------------------------- Mvmt ---------------------------------------------------------
+
     Mvmt::Mvmt (TDObj &td)
     {	
 	ptd = &td;
@@ -33,7 +36,38 @@ namespace grapefruit
     }
     
 
+    void Mvmt::hippity (void)
+    {
+    // ----------------------------- taking care of subscribed Mvmt -------------------------------
 
+    // JDJDJDJD this part should move to cinetic.cpp, no ???
+
+    while (!Mvmt::qfmvmt.empty()) {					// first we do the first-step of all Mvmt newly-inserted...
+	Mvmt &m = *Mvmt::qfmvmt.front();
+	m.firststep();
+	m.lasttime = Mvmt::curtime;					// before time is updated so that their curtime won't be late !
+
+	Mvmt::qfmvmt.pop();
+    }
+
+    Mvmt::curtime = SDL_GetTicks ();
+
+    {
+static queue<Mvmt*> qfinish;
+	LPMvmt::iterator lm;
+
+	for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt_end ; lm++) {	// first we step each of the subscribed Mvmt...
+	    if ((*lm)->step () == -1)					// if one finishes...
+		qfinish.push(*lm);					// we'll treat it afterward..
+	}
+	while (!qfinish.empty()) {					// AFTER having stepped ALL the Mvmt...
+	    qfinish.front()->finish();					// we finish the one that ended
+	    qfinish.pop();
+	}
+    }
+    }
+
+    // ----------------------------- Mv_Spin ------------------------------------------------------
 
     Mv_Spin::Mv_Spin (TDObj &td, Vector3 &axis, GLfloat speed, Uint32 duration) : Mvmt (td)
     {	speed1k = (2.0 * M_PI * speed) / 1000.0;

@@ -41,6 +41,19 @@ namespace grapefruit
     {	mactions.erase(handle);
     }
 
+    const string & Action::getacname (void)
+    {
+static string name ("  -- Unamed Action --");
+	return name;
+    }
+
+    void Action::dump_mactions (ostream &cout)
+    {	map<long, Action *>::iterator mi,
+				      me = mactions.end();
+	for (mi=mactions.begin() ; mi!=me ; mi++)
+	    cout << "    " << mi->second->handle << " = " << mi->second->getacname() << endl ;
+    }
+    
 // -------------- ActionPool --------------------------------------------------
 //
 //! pool of Actions, with cross-existence checking.
@@ -55,6 +68,8 @@ namespace grapefruit
 	while (li!=le) {
 	    mi = Action::mactions.find(*li);
 	    if (mi != me) {
+		if (debug_pool)
+		    bzouzerr << "about to perform (" << mi->second->getacname () << ", " << mi->second->handle << ")->doit()" << endl ;
 		mi->second->doit();
 		li++;
 	    } else {
