@@ -41,15 +41,15 @@ namespace grapefruit
     //! a string embedded in some TDObj
     class TDString : virtual public TDObj
     {
+	/** @name TDString specificities
+	 *  a string embedded in a TDObj
+	 */
+	//@{
 	    string s;	    //!< the string content itself
 	    double h;	    //!< JDJDJDJD to be better documented ! is it the heith of the string or what ?
 	    double width;   //!< the line and point width
 
 	    double sh, sw;
-
-	    //	// JDJDJDJD fausse cinematique temporaire !!!!
-	    //	double vra;	// vitesse de rotation angulaire
-	    //	double angrot;	// angle de rotation
 
 	    vector<Vector3> vv; //!< the list of points defining some convex-envelope of our object (here : a box)
 
@@ -70,6 +70,7 @@ namespace grapefruit
 	    inline void setwidth (double width)
 		{   TDString::width = width;
 		}
+	//@}
 
 	    virtual void render (void);
 	    virtual void renderclickablezone (void);

@@ -107,7 +107,7 @@ namespace grapefruit
 
 	    // ----------- testing various status --------------------------------------------------
 	    //
-	    /** @name status methods
+	    /** @name TDObj status methods
 	     *  testing various status
 	     */
 	    //@{
@@ -125,7 +125,7 @@ namespace grapefruit
 	    
 	    // ----------- drawing, displaying activating methods ----------------------------------
 	    //
-	    //! @name drawing, displaying activating methods
+	    //! @name TDObj drawing, displaying activating methods
 	    //@{
 	    
 	    //! the method that sends to the OpenGL rendering device the current shape of the TD
@@ -163,7 +163,7 @@ namespace grapefruit
 
 	    // ----------- size reporting methods --------------------------------------------------
 	    //
-	    //! @name size reporting methods
+	    //! @name TDObj size reporting methods
 	    //@{
 
 	    //! reports TD's nearest lower-left box point and TD's size for each axis direction (after scaling and projection)
@@ -177,7 +177,7 @@ namespace grapefruit
 	    
 	    // ----------- motion methods ----------------------------------------------------------
 	    //
-	    /** @name motion methods
+	    /** @name TDObj motion methods
 	     *  \brief moving and scaling the object into rendering space
 	     *  @{
 	     */
@@ -220,7 +220,7 @@ namespace grapefruit
 	    
 	    // ----------- vertical placement management -------------------------------------------
 	    //
-	    /** @name vertical placement management
+	    /** @name TDObj vertical placement management
 	     *  z-position of TDs are ordered ; distances between TDs are set according to diameter()
 	     *  when they are added to displayed-TDs list.<br>
 	     *  They are also rendered according to their ordered positions (from bottom) for
@@ -248,7 +248,7 @@ namespace grapefruit
 
 	    // ----------- miscelaneous ------------------------------------------------------------
 	    //
-	    /** @name miscelaneous
+	    /** @name TDObj miscelaneous
 	     *  testing various status
 	     */
 	    //@{
@@ -270,21 +270,36 @@ namespace grapefruit
     };
 
 
+    // ----------------------------- ACPTD ---------------------------------------------------------
+    //
+    // Delivers binding Action to TDObj
+    //
+
+    class ACpTD : public Action
+    {
+	protected:
+	    TDObj * ptd;
+	public:
+	    virtual ~ACpTD(void) {}
+	    ACpTD (TDObj * p)
+		{   ptd = p;
+		}
+    };
+
     // ----------------------------- TDObjSHable ---------------------------------------------------
     //
     // Delivers hide, show and toggle actions for any TDObj
     //
 
+
     //! Action for hiding and desactivating some TDObj
 
-    class ACTDHide : public Action
+    class ACTDHide : public ACpTD
     {
-	    TDObj * ptd;
 	public:
 	    virtual ~ACTDHide(void) {}
-	    ACTDHide (TDObj * p)
-		{   ptd = p;
-		}
+	    ACTDHide (TDObj * p) : ACpTD (p) {}
+
 	    virtual void doit (void)
 		{   if (ptd->isactivated ())
 			ptd->desactivate ();
@@ -300,14 +315,11 @@ namespace grapefruit
 
     //! Action for showing and activating some TDObj
 
-    class ACTDShow : public Action
+    class ACTDShow : public ACpTD
     {
-	    TDObj * ptd;
 	public:
 	    virtual ~ACTDShow(void) {}
-	    ACTDShow (TDObj * p)
-		{   ptd = p;
-		}
+	    ACTDShow (TDObj * p) : ACpTD (p) {}
 
 	    virtual void doit (void)
 		{   if (!ptd->isshown ())
@@ -324,14 +336,11 @@ namespace grapefruit
 
     //! Action for toggling some TDObj
 
-    class ACTDToggle : public Action
+    class ACTDToggle : public ACpTD
     {
-	    TDObj * ptd;
 	public:
 	    virtual ~ACTDToggle(void) {}
-	    ACTDToggle (TDObj * p)
-		{   ptd = p;
-		}
+	    ACTDToggle (TDObj * p) : ACpTD (p) {}
 
 	    virtual void doit (void)
 		{   if (ptd->isshown ()) {
@@ -358,55 +367,58 @@ namespace grapefruit
     
     class TDObjSHable : virtual public TDObj
     {	
-	    ACTDHide * pactdhide;
-	    ACTDShow * pactdshow;
-	    ACTDToggle * pactdtoggle;
 	public:
-	    TDObjSHable (void)
-		{   pactdhide = NULL;
-		    pactdshow = NULL;
-		    pactdtoggle = NULL;
-		}
-	    ~TDObjSHable (void)
-		{   if (pactdhide != NULL) delete (pactdhide);
-		    if (pactdshow != NULL) delete (pactdshow);
-		    if (pactdtoggle != NULL) delete (pactdtoggle);
-		}
-	    //! returns the Action that hides and desactivates the TD
+
+	    // ----------- Set of bound Action for triggering show/hide and co ---------------------
+	    //
+	    /** @name TDObjSHable specificities
+	     * Set of Action bound to TDObj for triggering show/hide and co
+	     */
+	    //@{
+	    
+	    ACTDHide actdhide;	    //!< the Action that hides and desactivates the TD
+	    ACTDShow actdshow;	    //!< the Action that shows and sactivates the TD
+	    ACTDToggle actdtoggle;  //!< the action that toggles the TD
+
+	    TDObjSHable (void) : actdhide (this), actdshow(this), actdtoggle(this) {}
+	    ~TDObjSHable (void) {}
+
+	    //! OBSOLETE: returns the Action that hides and desactivates the TD
 	    Action * getactdhide (void)
-		{   if (pactdhide == NULL)
-			pactdhide = new ACTDHide (this);
-		    return pactdhide;
+		{   return &actdhide;
 		}
-	    //! returns the Action that shows and sactivates the TD
+	    //! OBSOLETE: returns the Action that shows and sactivates the TD
 	    Action * getactdshow (void)
-		{   if (pactdshow == NULL)
-			pactdshow = new ACTDShow (this);
-		    return pactdshow;
+		{   return &actdshow;
 		}
-	    //! returns the action that toggles the TD
+	    //! OBSOLETE: returns the action that toggles the TD
 	    Action * getactdtoggle (void)
-		{   if (pactdtoggle == NULL)
-			pactdtoggle = new ACTDToggle (this);
-		    return pactdtoggle;
+		{   return &actdtoggle;
 		}
+	    //@}
     };
     
                 
     // ----------------------------- TDCompound ----------------------------------------------------
     //
-    //! compound of TDObjs
+    //! compound of TDObj(s)
     //! \nosubgrouping
 
     class TDCompound : virtual public TDObj
     {           
 	public: 
-	    list <TDObj*> ltd;
+	    /** @name TDCompound specificities
+	     * several TDObj grouped into one "super" TDObj
+	     */
+	    //@{
+
+	    list <TDObj*> ltd;						    //!< the list of contained TDObj
 	    virtual ~TDCompound (void);
 	    TDCompound (void) : TDObj() {}
 
-	    virtual bool push_back (TDObj & td);
-	    virtual bool erase (list<TDObj*>::iterator id_ltdparent);
+	    virtual bool push_back (TDObj & td);			    //!< adds a TDObj to the set
+	    virtual bool erase (list<TDObj*>::iterator id_ltdparent);	    //!< is supposed to remove an element
+	    //@}
 
 	    virtual void render (void);
 	    virtual void renderclickablezone (void);
@@ -418,6 +430,7 @@ namespace grapefruit
 	    virtual GLfloat diameter (void) = 0;
 
 	    virtual const string & gettdname (void);
+
     };      
 
 
