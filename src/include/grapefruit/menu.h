@@ -60,7 +60,7 @@ namespace grapefruit
 			bzouzerr << "Action!!! (" << nbclick << ")" << endl ;
 		    nbclick ++;
 		}
-	    virtual const string & getacname (void);
+	    virtual string getacname (void);
     };
 
     class TDMenu ;
