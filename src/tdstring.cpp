@@ -58,6 +58,11 @@ namespace grapefruit
 	vv.push_back(Vector3(sw,  0.0, 0.0));
     }
 
+    const string & TDString::gettdname (void)
+    {	static string name ("tdstring");
+	return name;
+    }
+
     void TDString::update (const string &s)
     {
 	TDString::s = s;

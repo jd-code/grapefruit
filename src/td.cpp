@@ -46,6 +46,11 @@ TDObj::~TDObj (void)
     }
 }
 
+const string & TDObj::gettdname (void)
+{   static string name ("undefined");
+    return name;
+}
+
 void TDObj::show (void)
 {
     if (id_displayed == td_displayed.end()) {
@@ -244,6 +249,11 @@ void TDCompound::desactivate ()
         (*li)->desactivate ();
 }
 
+const string & TDCompound::gettdname (void)
+{   static string name ("tdcompound");
+    return name;
+}
+
 
 // ------------------------- global TDObj methods -------------------------------------------------
 // 
@@ -433,7 +443,7 @@ void ACDump_td_displayed::doit (void)
     
     cerr << "--------------------------dump of td_displayed------------------------------" << endl ;
     for (li=td_displayed.begin() ; li!=td_displayed.end() ; li++) {
-	cerr << (*li)->pos << " diam =" << setw (10) << (*li)->diameter() ;
+	cerr << (*li)->pos << " diam =" << setw (10) << (*li)->diameter() << " " << (*li)->gettdname();
 	if (thereisaprevious) {
 	    if ((*li)->pos.z < zprev)
 		cerr << " order mismatch !" << endl ;

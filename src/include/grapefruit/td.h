@@ -256,6 +256,8 @@ namespace grapefruit
 	    virtual int startgrabber (SDL_Event const & event);
 	    virtual int endgrabber (SDL_Event const & event);
 	    virtual void grabberchange (SDL_Event const & event);
+
+	    virtual const string & gettdname (void);
 	    //@}
 
 	friend class TDCompound;
@@ -358,6 +360,8 @@ namespace grapefruit
 	    
 	    virtual void proj_size (Vector3 &offset, Vector3 &size) = 0;
 	    virtual GLfloat diameter (void) = 0;
+
+	    virtual const string & gettdname (void);
     };      
 
 
