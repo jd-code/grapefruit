@@ -90,6 +90,9 @@ namespace grapefruit
 {
     using namespace std ;
 
+    //! returns the release-name of this module
+    const char * get_grapefruit_version (void);
+
     // --------------- RotButton --------------------------------------------------
     //
     //! Skeleton-class for building rotating buttons
