@@ -84,9 +84,3 @@ namespace grapefruit
 
 #endif // GRAPEKEY_H_INC
 
-/*
- * $Log: grapekey.h,v $
- * Revision 1.1  2003/12/03 21:57:54  jd
- * *** empty log message ***
- *
- */

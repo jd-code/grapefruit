@@ -188,32 +188,3 @@ namespace grapefruit
 
 #endif // AGRUME_H_INC
 
-/*
- * $Log: agrume.h,v $
- * Revision 1.7  2004/05/03 22:02:50  jd
- * big merge for mingw/msys and cross-mingw
- *
- * Revision 1.6  2004/03/14 00:24:55  jd
- * documentation updates
- *
- * Revision 1.5  2003/09/06 22:17:16  jd
- * first release of TDs
- *
- * Revision 1.4  2003/06/04 22:41:52  jd
- * enabled some close buttons for agrume
- *
- * Revision 1.3  2003/05/15 22:41:12  jd
- * added transparency functions
- * tuned polyline
- * tuned local include / vs sys include
- *
- * Revision 1.2  2003/05/11 21:53:50  jd
- * updtaes and debug after merging against genrythm
- *
- * Revision 1.1.1.1  2003/04/22 14:04:34  jd
- * librarisation of grapfruit
- *
- *
- */
- 
-

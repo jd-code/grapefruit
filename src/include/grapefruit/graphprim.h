@@ -54,19 +54,3 @@ namespace grapefruit
 
 #endif // GRAPHPRIM_H_INC
 
-/*
- * $Log: graphprim.h,v $
- * Revision 1.4  2004/03/14 00:24:55  jd
- * documentation updates
- *
- * Revision 1.3  2003/05/15 22:43:55  jd
- * tuned polyline
- *
- * Revision 1.2  2003/04/22 16:39:28  jd
- * small libtool revision info tuning
- *
- * Revision 1.1.1.1  2003/04/22 14:04:34  jd
- * librarisation of grapfruit
- *
- *
- */

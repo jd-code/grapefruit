@@ -272,29 +272,3 @@ bool TDMenu::push_back (TDMenuItem & td)
 
 }   // grapefruit namespace's end...
 
-
-/*
- * $Log: menu.cpp,v $
- * Revision 1.7  2004/03/13 16:36:05  cristelle
- * ONESHOT staytype added and small adjustments in deletions vs actions ordering
- *
- * Revision 1.6  2004/03/10 23:27:28  jd
- * more correction in TDMenu alignments
- *
- * Revision 1.5  2004/03/10 23:09:27  jd
- * first thread of alignments correction in TDMenu
- *
- * Revision 1.4  2004/02/26 15:27:40  cristelle
- * orthographic changes in menus defines
- *
- * Revision 1.3  2004/02/10 14:18:00  cristelle
- * added a change viewtype for menu objects.
- *
- * Revision 1.2  2004/01/31 15:59:17  jd
- * introduction of TDObjHideable TDObjShowable
- *
- * Revision 1.1  2004/01/20 15:41:53  jd
- * massive librarization around menu, stdstrings etc
- *
- *
- */

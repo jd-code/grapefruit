@@ -20,8 +20,3 @@ namespace grapefruit
 
 #endif // GLVFONT_H_INC
 
-/*
- * $log:$
- *
- */
-
