@@ -24,6 +24,8 @@
  * grapefruit@disjunkt.com  -  http://grapefruit.disjunkt.com/
  */
 
+#include <math.h>
+
 #include "grapefruit.h"
 #include <bzouz/bzouz.h>
 
