@@ -279,7 +279,6 @@ namespace grapefruit
 
     class ACTDHide : public Action
     {
-	    string name;
 	    TDObj * ptd;
 	public:
 	    virtual ~ACTDHide(void) {}
@@ -292,9 +291,9 @@ namespace grapefruit
 		    if (ptd->isshown ())
 			ptd->hide ();
 		}
-	    virtual const string & getacname (void)
-		{   if (name.size() == 0)
-			name = ptd->gettdname() + "->ACTDHide";
+	    virtual string getacname (void)
+		{   string name(ptd->gettdname());
+		    name += "->ACTDHide";
 		    return name;
 		}
     };
@@ -303,7 +302,6 @@ namespace grapefruit
 
     class ACTDShow : public Action
     {
-	    string name;
 	    TDObj * ptd;
 	public:
 	    virtual ~ACTDShow(void) {}
@@ -317,9 +315,9 @@ namespace grapefruit
 		    if (!ptd->isactivated ())
 			ptd->activate ();
 		}
-	    virtual const string & getacname (void)
-		{   if (name.size() == 0)
-			name = ptd->gettdname() + "->ACTDShow";
+	    virtual string getacname (void)
+		{   string name(ptd->gettdname());
+		    name += "->ACTDShow";
 		    return name;
 		}
     };
@@ -328,7 +326,6 @@ namespace grapefruit
 
     class ACTDToggle : public Action
     {
-	    string name;
 	    TDObj * ptd;
 	public:
 	    virtual ~ACTDToggle(void) {}
@@ -347,9 +344,9 @@ namespace grapefruit
 			    ptd->activate ();
 		    }
 		}
-	    virtual const string & getacname (void)
-		{   if (name.size() == 0)
-			name = ptd->gettdname() + "->ACTDToggle";
+	    virtual string getacname (void)
+		{   string name(ptd->gettdname());
+		    name += "->ACTDToggle";
 		    return name;
 		}
     };
@@ -443,7 +440,7 @@ namespace grapefruit
     {	public:
 	    virtual ~ACDump_td_displayed () {}
 	    virtual void doit ();
-	    virtual const string & getacname (void);
+	    virtual string getacname (void);
     };
 
     //! this Action takes one displayed TD and puts it on top of another displayed TD.
@@ -452,7 +449,7 @@ namespace grapefruit
     {	public:
 	    virtual ~ACScramble_td_displayed () {}
 	    virtual void doit ();
-	    virtual const string & getacname (void);
+	    virtual string getacname (void);
     };
 
     // ----------------------------- size calculation utils ----------------------------------------

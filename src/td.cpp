@@ -490,9 +490,8 @@ void ACDump_td_displayed::doit (void)
     }
     cerr << "------------- " << td_displayed.size() << " elements" << endl ;
 }
-const string & ACDump_td_displayed::getacname (void)
-{
-static string name("ACDump_td_displayed");
+string ACDump_td_displayed::getacname (void)
+{   string name("ACDump_td_displayed");
     return name;
 }
  
@@ -515,9 +514,8 @@ void ACScramble_td_displayed::doit (void)
     for (i=0, li=td_displayed.begin() ; (i<r) && (li!=td_displayed.end()) ; li++, i++);
     p->show(**li);
 }
-const string & ACScramble_td_displayed::getacname (void)
-{
-static string name("ACScramble_td_displayed");
+string ACScramble_td_displayed::getacname (void)
+{   string name("ACScramble_td_displayed");
     return name;
 }
 

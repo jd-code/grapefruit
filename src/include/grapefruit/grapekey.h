@@ -58,7 +58,7 @@ namespace grapefruit
 	    Action (void);
 	    virtual void doit (void) = 0;   //!< the virtual action-code to be performed, by itself.
 
-	    virtual const string & getacname (void);
+	    virtual string getacname (void);
 	    static void dump_mactions (ostream &cout);
 	    long gethandle (void)
 		{   return handle;
