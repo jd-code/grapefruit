@@ -16,26 +16,26 @@ void TDMenuItem::gotclicked (SDL_Event const &event)
 {
     if (ptdmenu == NULL) {
 	bzouzerr << " we have here a ptdmenu that is NULL ????" << endl ;
-	paclick->doit();
+	paclick.doit();
     }
     else switch (ptdmenu->stayType) {
 	case TDMenu::ONECLICK:
 	    ptdmenu->desactivate ();
 	    ptdmenu->hide ();
-	    paclick->doit();
+	    paclick.doit();
 	    break;
 
 	case TDMenu::ONESHOT:
 	    ptdmenu->desactivate ();
 	    ptdmenu->hide ();
-	    paclick->doit();
+	    paclick.doit();
 	    delete (ptdmenu);
 	    // JDJDJDJD ceci est mis en stand-by jusqu'à ce qu'on en ait de nouveau besoin
 	    // committodelete (ptdmenu);
 	    break;
 
 	default:
-	    paclick->doit();
+	    paclick.doit();
     }
 }
 //void TDMenuItem::gotclicked (SDL_Event const &event) 

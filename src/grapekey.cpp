@@ -28,9 +28,54 @@
 namespace grapefruit
 {
 
+// --------------- Action -----------------------------------------------------
+//
+//! canvas for every and any performable action in our software
+
+    Action::Action (void)
+    {	handle = n_occur++;
+	mactions[handle] = this;
+    }
+
+    Action::~Action (void)
+    {	mactions.erase(handle);
+    }
+
+// -------------- ActionPool --------------------------------------------------
+//
+//! pool of Actions, with cross-existence checking.
+
+    void ActionPool::doit (void)
+    {
+	  map<long, Action *>::iterator	mi,
+					me = Action::mactions.end();	// JDJDJDJD could be factorised
+		   list<long>::iterator	li = l.begin(),
+					le = l.end();
+
+	while (li!=le) {
+	    mi = Action::mactions.find(*li);
+	    if (mi != me) {
+		mi->second->doit();
+		li++;
+	    } else {
+		if (warnaboutmissingActions)
+		    bzouzerr << "warning: attempt to call a missing Action" << endl;
+		list<long>::iterator lj = li;
+		li++;
+		l.erase (lj);
+	    }
+	}
+    }
+
+    ActionPool & ActionPool::operator += (const Action & a)
+    {
+	l.push_back (a.handle);
+	return *this;
+    }
+    
 // --------------- GrapeKeyMapKey ---------------------------------------------
 //
-//! match some keymaps to some Actions objects
+//! match some keymaps to some Actions objects.
 //
 
     GrapeKeyMapKey::GrapeKeyMapKey (void)
@@ -39,36 +84,36 @@ namespace grapefruit
 
     void GrapeKeyMapKey::map_unicode_action (Uint16 unicode, Action & a)
     {
-	map_unicode [unicode] = &a;
+	map_unicode [unicode] += a;
     }
-    
+
     void GrapeKeyMapKey::map_sdlkey_action (SDLKey k, Action & a)
     {
-	map_sdlkey [k] = &a;
+	map_sdlkey [k] += a;
     }
 
     void GrapeKeyMapKey::map_sdlkey_action (SDLKey k, SDLMod mod, Action & a)
     {
-	map_sdlkeymod [ (mod << 16) | k ] = &a;
+	map_sdlkeymod [ (mod << 16) | k ] += a;
     }
 
     bool GrapeKeyMapKey::trigger_action (SDL_Event const & event)
     {
-	{   map<Uint16, Action*>::iterator mi = map_unicode.find (event.key.keysym.unicode);
+	{   map<Uint16, ActionPool>::iterator mi = map_unicode.find (event.key.keysym.unicode);
 	    if (mi!= map_unicode.end()) {
-		mi->second->doit();
+		mi->second.doit();
 		return true;
 	    }
 	}
-	{   map<SDLKey, Action*>::iterator mi = map_sdlkey.find (event.key.keysym.sym);
+	{   map<SDLKey, ActionPool>::iterator mi = map_sdlkey.find (event.key.keysym.sym);
 	    if (mi!= map_sdlkey.end()) {
-		mi->second->doit();
+		mi->second.doit();
 		return true;
 	    }
 	}
-	{   map<Uint32, Action*>::iterator mi = map_sdlkeymod.find ((event.key.keysym.mod << 16) | event.key.keysym.sym);
+	{   map<Uint32, ActionPool>::iterator mi = map_sdlkeymod.find ((event.key.keysym.mod << 16) | event.key.keysym.sym);
 	    if (mi!= map_sdlkeymod.end()) {
-		mi->second->doit();
+		mi->second.doit();
 		return true;
 	    }
 	}
