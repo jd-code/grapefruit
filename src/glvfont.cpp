@@ -277,7 +277,48 @@ int *glfb[] = {
     /** \addtogroup doxgr_glvfont font rendering functions
      * \@{
      */
+
+GLint dl_glvfont = 0;
+bool dl_isvalid = false;
+
+int glvxoff[256], glvyoff [256];
+
+void render_char_from_table (int c, double &xoff, double &yoff);    // JDJDJDJD to be rre-ordered
+void render_char_notrans (int c, double &xoff, double &yoff);	    // JDJDJDJD to be rre-ordered
+
 void render_char (int c, double &xoff, double &yoff)
+{
+    glPushMatrix();
+    glTranslatef (xoff, yoff, 0);
+    if (dl_isvalid) {
+	glCallList (dl_glvfont + c);	    // JDJDJDJD some controls about overflow are missing here !
+	xoff += glvxoff[c],
+	yoff += glvyoff[c];
+    } else {
+	render_char_notrans (c, xoff, yoff);
+    }
+    glPopMatrix();
+
+    if (c == 10)    // CHAR_REWIND
+	xoff = 0;
+}
+
+////////void render_char (int c, double &xoff, double &yoff)
+////////{   render_char_from_table (c, xoff, yoff);
+////////}
+
+void render_char_from_table (int c, double &xoff, double &yoff)
+{
+    glPushMatrix();
+    glTranslatef (xoff, yoff, 0);
+    render_char_notrans (c, xoff, yoff);
+    glPopMatrix();
+
+    if (c == 10)    // CHAR_REWIND
+	xoff = 0;
+}
+
+void render_char_notrans (int c, double &xoff, double &yoff)
 {
     GLMarks * p = (GLMarks *) (glfb [c]);   // JDJDJDJD some controls about overflow are missing here !
 
@@ -292,12 +333,14 @@ void render_char (int c, double &xoff, double &yoff)
 	switch (*p) {
 	    case CALL_LIST_REL:
 		p++;
-		tx = xoff, ty = yoff;
-		render_char (*p, tx, ty);
-		if (tx-xoff > xstep)
-		    xstep = tx-xoff;
-		if (ty-yoff > ystep)
-		    ystep = ty-yoff;
+
+		tx = 0, ty = 0;
+		// render_char (*p, tx, ty);
+		render_char_notrans (*p, tx, ty);
+		if (tx > xstep)
+		    xstep = tx;
+		if (ty > ystep)
+		    ystep = ty;
 		break;
 
 	    case CHAR_STEP:
@@ -306,7 +349,7 @@ void render_char (int c, double &xoff, double &yoff)
 		break;
 		
 	    case CHAR_REWIND:
-		xstep -= xoff;
+		// xstep -= xoff;
 		break;
 		
 	    case LINE_FEED:
@@ -318,7 +361,7 @@ void render_char (int c, double &xoff, double &yoff)
 		p++;
 		glBegin (GL_LINES);
 		while (*p >= 0) {
-		    glVertex2f (*p + xoff, *(p+1) + yoff);
+		    glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -330,7 +373,7 @@ void render_char (int c, double &xoff, double &yoff)
 		p++;
 		glBegin (GL_POINTS);
 		while (*p >= 0) {
-		    glVertex2f (*p + xoff, *(p+1) + yoff);
+		    glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -342,7 +385,7 @@ void render_char (int c, double &xoff, double &yoff)
 		p++;
 		glBegin (GL_LINE_LOOP);
 		while (*p >= 0) {
-		    glVertex2f (*p + xoff, *(p+1) + yoff);
+		    glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -354,7 +397,7 @@ void render_char (int c, double &xoff, double &yoff)
 		p++;
 		glBegin (GL_LINE_STRIP);
 		while (*p >= 0) {
-		    glVertex2f (*p + xoff, *(p+1) + yoff);
+		    glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -515,6 +558,26 @@ Vector3 compute_string_size (const string &s, double addstep)
 	xoff += addstep;
     }
     return Vector3(mxoff, myoff, 0.0);
+}
+
+int loadglvfont (void)
+{
+    dl_isvalid = false;
+    dl_glvfont = glGenLists (256);		    // JDJDJDJD we should test the result here
+
+    int i;
+    double xoff , yoff;
+    for (i=0 ; i<256 ; i++) {
+	xoff = 0.0, yoff = 0.0;
+	glNewList (dl_glvfont+i, GL_COMPILE);
+	render_char_notrans (i, xoff, yoff);
+	glEndList ();
+	glvxoff[i] = (int)xoff;
+	glvyoff[i] = (int)yoff;
+    }
+    dl_isvalid = true;
+
+    return 0;
 }
 
     //! @}

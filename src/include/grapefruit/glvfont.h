@@ -16,6 +16,7 @@ namespace grapefruit
 {
     Vector3 render_string (const string &s, double addstep=0);
     Vector3 compute_string_size (const string &s, double addstep=0);
+    int loadglvfont (void);
 }
 
 #endif // GLVFONT_H_INC
