@@ -6,24 +6,34 @@ using namespace grapefruit ;
 namespace grapefruit
 {
 
-    /** \defgroup doxgr_glvfont font rendering functions
-     * \@{
+    /** @defgroup doxgr_glvfont font rendering functions
+     * @warning This API might change a lot still.
+     * @brief Those functions and symbols are used to render vector-defined fonts with Open-GL.
+     *
+     * Externally, only grapefruit::render_string, grapefruit::compute_string_size and grapefruit::loadglvfont are publicly available, all others are for internal use only.
+     * The font description is stored in a set of tables of integers, one per char. a table of 256 integer pointers stores the entry point for each char.
+     * for rendering chars or computing char-sizes, there are two functions : one that parse the GLMarks description on the fly, another that
+     * use a stored display-list or explicitely stored offsets.
+     * 
+     * @{
      */
 
-typedef enum {	ENDLIST		= -100,
-		END	    	= -101,
-		LINE_STRIP  	= -102,
-		LINE_LOOP   	= -103,
-		LINES	    	= -104,
-		POINTS	    	= -105,
-
-		CHAR_STEP   	= -200,
-		CHAR_REWIND 	= -201,
-		LINE_FEED   	= -202,
-
-		CHAR_WIDTH	= -203,
-
-		CALL_LIST_REL	= -204,
+//! The description tokens for glvfonts.
+    
+typedef enum {	ENDLIST		= -100,	    //!< end of the description
+		END	    	= -101,	    //!< end of some GL-Object
+		LINE_STRIP  	= -102,	    //!< starts a LINE_STRIP GL-object (open), is followed by couples of coordinates until END
+		LINE_LOOP   	= -103,	    //!< starts a LINE_LOOP GL-object (closed), is followed by couples of coordinates until END
+		LINES	    	= -104,	    //!< some GL lines, is followed by couples of coordinates until END
+		POINTS	    	= -105,	    //!< some GL points, is followed by couples of coordinates until END
+                                                
+		CHAR_STEP   	= -200,	    //!< the step of the char (where to put the next following char)
+		CHAR_REWIND 	= -201,	    //!< triggers the offsets to go back to the beginning of the line
+		LINE_FEED   	= -202,	    //!< triggers the offseast to go one line down
+                                                
+		CHAR_WIDTH	= -203,	    //!< DOES NOT work yet ! is supposed to give the char witdth when it is not equal to CHAR_STEP
+                                                
+		CALL_LIST_REL	= -204,	    //!< calls another chars description, usefull for creating composed chars. the biggest of all offsets will be kept
 	     } GLMarks;
 
     //! @}
@@ -275,50 +285,24 @@ int *glfb[] = {
 } ;
 
     /** \addtogroup doxgr_glvfont font rendering functions
-     * \@{
+     * @{
      */
 
-GLint dl_glvfont = 0;
-bool dl_isvalid = false;
+// --------------------------------------------------------------------------------------------------------------------------
+// non exported globals, used only via the exported functions of this module
 
-int glvxoff[256], glvyoff [256];
+GLint dl_glvfont = 0;			    //!< if non-null, the first GL-handle of the display-lists for chars
+bool dl_isvalid = false;		    //!< is grapefruit::dl_glvfont a valid handle ? grapefruit::loadglvfont can (re-)validate it.
 
-void render_char_from_table (int c, double &xoff, double &yoff);    // JDJDJDJD to be rre-ordered
-void render_char_notrans (int c, double &xoff, double &yoff);	    // JDJDJDJD to be rre-ordered
+int glvxoff[256],			    //!< the horizontal offsets for each chars
+    glvyoff [256];			    //!< the vertical offsets for each chars
+bool  glvoff_isvalid = false;		    //!< are the offsets stored in glvxoff and glvyoff valid ? grapefruit::loadglvfont can (re-)validate it.
 
-void render_char (int c, double &xoff, double &yoff)
-{
-    glPushMatrix();
-    glTranslatef (xoff, yoff, 0);
-    if (dl_isvalid) {
-	glCallList (dl_glvfont + c);	    // JDJDJDJD some controls about overflow are missing here !
-	xoff += glvxoff[c],
-	yoff += glvyoff[c];
-    } else {
-	render_char_notrans (c, xoff, yoff);
-    }
-    glPopMatrix();
 
-    if (c == 10)    // CHAR_REWIND
-	xoff = 0;
-}
 
-////////void render_char (int c, double &xoff, double &yoff)
-////////{   render_char_from_table (c, xoff, yoff);
-////////}
+//! renders the char c and updates accordingly the horizontal and vertical offsets, doesn't use any DL
 
 void render_char_from_table (int c, double &xoff, double &yoff)
-{
-    glPushMatrix();
-    glTranslatef (xoff, yoff, 0);
-    render_char_notrans (c, xoff, yoff);
-    glPopMatrix();
-
-    if (c == 10)    // CHAR_REWIND
-	xoff = 0;
-}
-
-void render_char_notrans (int c, double &xoff, double &yoff)
 {
     GLMarks * p = (GLMarks *) (glfb [c]);   // JDJDJDJD some controls about overflow are missing here !
 
@@ -333,10 +317,8 @@ void render_char_notrans (int c, double &xoff, double &yoff)
 	switch (*p) {
 	    case CALL_LIST_REL:
 		p++;
-
 		tx = 0, ty = 0;
-		// render_char (*p, tx, ty);
-		render_char_notrans (*p, tx, ty);
+		render_char_from_table (*p, tx, ty);
 		if (tx > xstep)
 		    xstep = tx;
 		if (ty > ystep)
@@ -423,7 +405,10 @@ void render_char_notrans (int c, double &xoff, double &yoff)
     xoff += xstep, yoff += ystep;
 }
 
-void compute_char_size (int c, double &xoff, double &yoff)
+
+//! computes and updates the horizontal and vertical offsets associated with char c, doesn't use any DL nor any cached datas
+
+void compute_char_size_from_table (int c, double &xoff, double &yoff)
 {
     GLMarks * p = (GLMarks *) (glfb [c]);   // JDJDJDJD some controls about overflow are missing here !
 
@@ -438,12 +423,12 @@ void compute_char_size (int c, double &xoff, double &yoff)
 	switch (*p) {
 	    case CALL_LIST_REL:
 		p++;
-		tx = xoff, ty = yoff;
-		compute_char_size (*p, tx, ty);
-		if (tx-xoff > xstep)
-		    xstep = tx-xoff;
-		if (ty-yoff > ystep)
-		    ystep = ty-yoff;
+		tx = 0, ty = 0;
+		compute_char_size_from_table (*p, tx, ty);
+		if (tx > xstep)
+		    xstep = tx;
+		if (ty > ystep)
+		    ystep = ty;
 		break;
 
 	    case CHAR_STEP:
@@ -452,7 +437,7 @@ void compute_char_size (int c, double &xoff, double &yoff)
 		break;
 		
 	    case CHAR_REWIND:
-		xstep -= xoff;
+		// xstep -= xoff;
 		break;
 		
 	    case LINE_FEED:
@@ -464,7 +449,7 @@ void compute_char_size (int c, double &xoff, double &yoff)
 		p++;
 		// glBegin (GL_LINES);
 		while (*p >= 0) {
-		    // glVertex2f (*p + xoff, *(p+1) + yoff);
+		    // glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -476,7 +461,7 @@ void compute_char_size (int c, double &xoff, double &yoff)
 		p++;
 		// glBegin (GL_POINTS);
 		while (*p >= 0) {
-		    // glVertex2f (*p + xoff, *(p+1) + yoff);
+		    // glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -488,7 +473,7 @@ void compute_char_size (int c, double &xoff, double &yoff)
 		p++;
 		// glBegin (GL_LINE_LOOP);
 		while (*p >= 0) {
-		    // glVertex2f (*p + xoff, *(p+1) + yoff);
+		    // glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -500,7 +485,7 @@ void compute_char_size (int c, double &xoff, double &yoff)
 		p++;
 		// glBegin (GL_LINE_STRIP);
 		while (*p >= 0) {
-		    // glVertex2f (*p + xoff, *(p+1) + yoff);
+		    glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
@@ -526,6 +511,45 @@ void compute_char_size (int c, double &xoff, double &yoff)
     xoff += xstep, yoff += ystep;
 }
 
+
+//! renders the char c and updates accordingly the horizontal and vertical offsets, uses DL if already stored via grapefruit::loadglvfont
+
+void render_char (int c, double &xoff, double &yoff)
+{
+    glPushMatrix();
+    glTranslatef (xoff, yoff, 0);
+    if (dl_isvalid) {
+	glCallList (dl_glvfont + c);	    // JDJDJDJD some controls about overflow are missing here !
+	xoff += glvxoff[c],
+	yoff += glvyoff[c];
+    } else {
+	render_char_from_table (c, xoff, yoff);
+    }
+    glPopMatrix();
+
+    if (c == 10)    // CHAR_REWIND
+	xoff = 0;
+}
+
+
+//! computes and updates the horizontal and vertical offsets associated with char c, may use cached datas already loaded with grapefruit::loadglvfont, doesn't use any DL though.
+
+void compute_char_size (int c, double &xoff, double &yoff)
+{
+    if (glvoff_isvalid) {
+	xoff += glvxoff[c],
+	yoff += glvyoff[c];
+    } else {
+	compute_char_size_from_table (c, xoff, yoff);
+    }
+
+    if (c == 10)    // CHAR_REWIND
+	xoff = 0;
+}
+
+
+//! renders the chars with glv-fonts, may use DLs if previously loaded by grapefruit::loadglvfont.
+
 Vector3 render_string (const string &s, double addstep)
 {
     string::const_iterator si;
@@ -539,6 +563,9 @@ Vector3 render_string (const string &s, double addstep)
     }
     return Vector3(xoff, yoff, 0.0);
 }
+
+
+//! computes the size that a rendered string would occupy (x is assumed horizontal and y vertical, writing from left to righ, bup to bottom), may use cached datas if grapefruit::loadglvfont was called once before.
 
 Vector3 compute_string_size (const string &s, double addstep)
 {
@@ -560,6 +587,9 @@ Vector3 compute_string_size (const string &s, double addstep)
     return Vector3(mxoff, myoff, 0.0);
 }
 
+
+//! loads or updates display-lists (DLs starting at grapefruit::dl_glvfont) used for rendering the glv-font, also updates the offsets (grapefruit::glvxoff and grapefruit::glvyoff) associated with each chars.
+
 int loadglvfont (void)
 {
     dl_isvalid = false;
@@ -570,12 +600,13 @@ int loadglvfont (void)
     for (i=0 ; i<256 ; i++) {
 	xoff = 0.0, yoff = 0.0;
 	glNewList (dl_glvfont+i, GL_COMPILE);
-	render_char_notrans (i, xoff, yoff);
+	render_char_from_table (i, xoff, yoff);
 	glEndList ();
 	glvxoff[i] = (int)xoff;
 	glvyoff[i] = (int)yoff;
     }
     dl_isvalid = true;
+    glvoff_isvalid = true;
 
     return 0;
 }
