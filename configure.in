@@ -133,8 +133,9 @@ CFLAGS="$CFLAGS $SDL_CFLAGS"
 CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
 
 dnl add our local include dir
-CFLAGS="-I"`pwd`"/src/include/grapefruit $CFLAGS"
-CXXFLAGS="-I"`pwd`"/src/include/grapefruit $CXXFLAGS"
+ABSSRCDIR=`cd $srcdir && pwd`
+CFLAGS="-I"$ABSSRCDIR"/src/include/grapefruit $CFLAGS"
+CXXFLAGS="-I"$ABSSRCDIR"/src/include/grapefruit $CXXFLAGS"
 
 dnl Check for OpenGL
 AC_MSG_CHECKING(for OpenGL support)
