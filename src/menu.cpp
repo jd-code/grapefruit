@@ -55,6 +55,16 @@ void TDMenuItem::gotclicked (SDL_Event const &event)
 //    paclick->doit();
 //}
 
+// ------------------------- TDMenuItemString
+
+void TDMenuItemString::update (const string & s) 
+{
+    tds->update (s);
+    ptdmenu->td_was_updated (*this);
+}
+
+
+
 // ------------------------- TDMenu ---------------------------------------------------------------
 //
 //
@@ -269,6 +279,41 @@ bool TDMenu::push_back (TDMenuItem & td)
     } else
 	return false ;
 }
+
+void TDMenu::td_was_updated ( TDObj & td)	//!< actions to perform if a celle was updated (e.g. recompute calls positions)
+{
+    list< TDObj * >::iterator ltdi;
+    Vector3 locoffset, locsize;
+    int loccolnum, linenum;
+    int i;
+      
+    if (!maxcolsizes.empty())
+	maxcolsizes.erase(maxcolsizes.begin(), maxcolsizes.end());
+    if (!maxlinesizes.empty())
+	maxlinesizes.erase(maxlinesizes.begin(), maxlinesizes.end());
+    
+    // recompute maxcolsize and maxlinesize
+    for (ltdi=TDCompound::ltd.begin(), i=0; (ltdi!=TDCompound::ltd.end())  ;i++, ltdi++) {
+	loccolnum = i % TDMenu::numcol;
+	linenum   = i / TDMenu::numcol;
+	(*ltdi)->proj_size (locoffset, locsize);
+	
+	// we update the maxcolsize (maximum column sizes) vector 
+	if (((int)maxcolsizes.size() < TDMenu::numcol) )  
+	    maxcolsizes.push_back (fabs(locsize.x));
+	 else
+	    if ( maxcolsizes[loccolnum]<fabs(locsize.x))
+		maxcolsizes[loccolnum]=fabs(locsize.x);
+	// we update the maxlinesize (maximum line sizes) vector
+	if (loccolnum == 0)
+	    maxlinesizes.push_back (fabs(locsize.y));
+	 else
+	    if ( maxlinesizes[linenum] < fabs(locsize.y)) 
+		maxlinesizes[linenum] = fabs(locsize.y);
+    }
+    compute_all_pos();
+}
+
 
 const string & TDMenu::gettdname (void)
 {   static string name ("tdmenu");
