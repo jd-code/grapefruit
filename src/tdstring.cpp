@@ -29,9 +29,6 @@
 using namespace grapefruit ;
 
 #include "glcomp.h"
-////////#include "glvfont.h"
-////////#include "tdstring.h"
-
 
 
 namespace grapefruit
@@ -50,6 +47,7 @@ namespace grapefruit
 	angrot = 0.0;
 	isgrabbable = true;
 	color = GLRGBA_WHITE;
+	width = 1.2;
 
 	// building the convex-envelope (here : a box)
 	vv.push_back(Vector3(0.0, 0.0, 0.0));
@@ -106,6 +104,16 @@ namespace grapefruit
 	}
 	// JDJD end of bad cinematic code*
 
+	glPushAttrib(   GL_LIGHTING_BIT |   // glMaterialfv, glShadeModel
+		    GL_COLOR_BUFFER_BIT |   // glBlendFunc
+			    GL_LINE_BIT |   // GL_LINE_SMOOTH glLineWidth
+		    GL_DEPTH_BUFFER_BIT |   // glDepthMask
+			    GL_HINT_BIT |   // glHint
+
+			 GL_POLYGON_BIT |   // GL_POLYGON_SMOOTH
+			   GL_POINT_BIT     // GL_POINT_SMOOTH
+		    );
+	
 	glMaterialfv (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,    (GLfloat *) GLRGBA_BLACK );
 	glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR,		    (GLfloat *) GLRGBA_BLACK );
 	glMateriali  (GL_FRONT_AND_BACK, GL_SHININESS, 128); 
@@ -126,7 +134,7 @@ namespace grapefruit
 	glTranslatef (-0.5 * sw, -0.5 * sh, 0.0);
 
 	if (SMOOTHFONT) {
-	    glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+	    glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);	//JDJDJDJD this should be global somewhere
 	    // glHint (GL_LINE_SMOOTH_HINT, GL_FASTEST);
 	    glEnable (GL_POINT_SMOOTH);
 	    glEnable (GL_LINE_SMOOTH);
@@ -135,8 +143,8 @@ namespace grapefruit
 	    // glBlendFunc (GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);  // JDJD blend
 	    // glBlendFunc (GL_ONE_MINUS_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);  // JDJD blend
 	}
-	glLineWidth (1.2);
-	glPointSize (1.2);
+	glLineWidth (width);
+	glPointSize (width);
 	glDepthMask (GL_FALSE);
 	render_string (s, 0.5);
 	// glDisable(GL_LINE_SMOOTH);
@@ -147,8 +155,8 @@ namespace grapefruit
 	    glDisable (GL_POINT_SMOOTH);
 	    glDisable (GL_LINE_SMOOTH);
 	}
-	
     }
+
     void TDString::renderclickablezone (void)
     {
 	double hh = h;	// JDJDJDJD beuark
