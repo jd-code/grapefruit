@@ -71,9 +71,9 @@ namespace grapefruit
     class TDMenuItem : public TDObj
     {
 	protected:
-	    TDMenu * ptdmenu;   //!< pointer to the menu which it belongs to
-	    Action * paclick;   //!< pointer to the bound action when clicked
-	    Action * pagrab;    //!< pointer to the bound action when grabbed // JDJDJDJD unfinished !
+	    TDMenu * ptdmenu;	//!< pointer to the menu which it belongs to
+	    ActionPool paclick;	//!< pointer to the bound ActionPool when clicked
+	    ActionPool pagrab;	//!< pointer to the bound ActionPool when grabbed // JDJDJDJD unfinished !
 
 	    virtual void valuechange (SDL_Event const &event){}
 	    virtual void gotclicked (SDL_Event const &event);
@@ -84,19 +84,19 @@ namespace grapefruit
 	    TDMenuItem (Action & ac) : TDObj ()
 		{
 		    ptdmenu = NULL;
-		    paclick = & ac;
-		    pagrab  = & ac;
+		    paclick += ac;
+		    pagrab  += ac;
 		}
 	    
 	    TDMenuItem (Action & aclick, Action & agrab) : TDObj ()
 		{
 		    ptdmenu = NULL;
-		    paclick = & aclick;
-		    pagrab  = & agrab ;
+		    paclick += aclick;
+		    pagrab  += agrab ;
 		}
 
 
-	    friend class TDMenu;
+	friend class TDMenu;
     };
 
 

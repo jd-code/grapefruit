@@ -12,21 +12,25 @@
 
 
 #include <matcalc/matcalc.h>
+#include <queue>
 
 namespace grapefruit
 {
     class TDObj;
     class Mvmt;
     typedef list<Mvmt*> LPMvmt;
+    typedef queue<Mvmt*> QPMvmt;
 
     class Mvmt
     {
-	public:
 	protected:
-     static LPMvmt lmvmt;				    //!< the list of movement who subscrided
+
+     static LPMvmt lmvmt;				    //!< the global list of Mvmt who subscrided
      static LPMvmt::iterator lmvmt_end;			    //!< the end of the lmvmt list (for speed? is it safe on all platform JDJDJDJD?)
+     static QPMvmt qfmvmt;				    //!< the global queue of Mvmt subscrided to their first step
+
 	    LPMvmt::iterator lmvmt_id;			    //!< our id in the lmvmt list
-	    list<LPMvmt::iterator>::iterator lmvmt_idtdid;  //!< our id in the bound-to-us-td's list of mvmt
+	    list<LPMvmt::iterator>::iterator lmvmt_idtdid;  //!< our id in the bound-to-us-td's list of Mvmt
 
      static Uint32 curtime;
 	    Uint32 lasttime;
@@ -34,30 +38,37 @@ namespace grapefruit
 	    TDObj * ptd;				    //!< the td we move
 
 	public:
+	    ActionPool pa_finish;			    //!< the Action to be performed at finishing the Mvmt
+
 	    virtual ~Mvmt (void);
-	    Mvmt (TDObj &td);				    //!< we shall not exist without being bound to a td
+	    Mvmt (TDObj &td);				    //!< Mvmt shall not exist without being bound to a td
 	    void start (void);
 	    void finish (void);
+	    virtual void firststep (void) = 0;
 	    virtual int step (void) = 0;
 
 	friend void TDrender (void);
-	friend inline LPMvmt::iterator getlmvmtend (void) { return lmvmt.end(); };
+
+	friend inline LPMvmt::iterator getlmvmtend (void) { return lmvmt.end(); };	// JDJDJDJD probably not safe on all STLs
     };
 
     class Mv_Spin : public Mvmt
     {
 	    GLfloat speed1k;	//!< the spin-speed in radian per millisecond
+	    Uint32 duration;	//!< the movement duration if any or zero
 	    Uint32 t_end;	//!< when the movement must end or 0 for non-ending
 	    Vector3 axis;	//!< the axis of the spin movement
 
 	public:
 	    Mv_Spin (TDObj &td, Vector3 &axe, GLfloat speed, Uint32 duration);
+	    virtual void firststep (void);
 	    virtual int step (void);
     };
 
 #ifdef AGCINETIC_H_GLOBINST
-    GRAPEFRUIT_H_SCOPE LPMvmt Mvmt::lmvmt;  //!< the list of movement we subscrided to
-    GRAPEFRUIT_H_SCOPE LPMvmt::iterator Mvmt::lmvmt_end = getlmvmtend ();
+    GRAPEFRUIT_H_SCOPE LPMvmt Mvmt::lmvmt;				    //!< the global list of Mvmt who subscrided
+    GRAPEFRUIT_H_SCOPE LPMvmt::iterator Mvmt::lmvmt_end = getlmvmtend ();   //!< the end of the lmvmt list (JDJDJDJD cf above)
+    GRAPEFRUIT_H_SCOPE QPMvmt Mvmt::qfmvmt;				    //!< the global queue of Mvmt subscrided to their first step
     GRAPEFRUIT_H_SCOPE Uint32 Mvmt::curtime = 0;
 #endif
     
