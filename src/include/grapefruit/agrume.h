@@ -1,6 +1,6 @@
 /* 
  * $Id$
- * GrapeFruit Copyright (C) 2002,2003 Cristelle Barillon & Jean-Daniel Pauget
+ * GrapeFruit Copyright (C) 2002,2003,2004 Cristelle Barillon & Jean-Daniel Pauget
  * a whole set of graphical utilities for SDL
  *
  * grapefruit@disjunkt.com  -  http://grapefruit.disjunkt.com/
@@ -173,16 +173,6 @@ namespace grapefruit
 	//! the list of shown agrumes
 	GRAPEFRUIT_H_SCOPE LPAgrume Agrume::shownagrumes;
 #endif
-
-////////#ifdef   AGRUME_H_GLOBINST
-////////	// --------------- agrume related globals -------------------------------------
-////////
-////////	//! the list of all agrumes
-////////	LPAgrume Agrume::agrumes;
-////////
-////////	//! the list of shown agrumes
-////////	LPAgrume Agrume::shownagrumes;
-////////#endif
 
 }
 
