@@ -21,6 +21,7 @@
  * 
  * you can also try the web at http://www.gnu.org/
  *
+ * grapefruit@disjunkt.com  -  http://grapefruit.disjunkt.com/
  */
 
 #ifndef   GRAPEFRUIT_H_INC
