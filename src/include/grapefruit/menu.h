@@ -147,6 +147,7 @@ namespace grapefruit
 	    virtual GLfloat diameter (void) 
 		{   return tds->diameter();
 		}
+	    void update (const string & s); //!< updates the value of the string
     };
 
 
@@ -192,6 +193,8 @@ namespace grapefruit
 	    bool push_back (TDMenuItem & td);
 	    bool push_back (TDObj & td);
 
+	    void td_was_updated ( TDObj & td);	//!< actions to perform if a celle was updated (e.g. recompute calls positions)
+	    	    
 	    void change_padding (Vector3 padding);  
 
 	    void change_viewtype (MenuViewType newviewtype, int numcol=1);
