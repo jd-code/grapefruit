@@ -213,7 +213,7 @@ namespace grapefruit
 #define TRANSP_DEFB ((Uint32)GL_SRC_COLOR + (((Uint32)GL_ONE_MINUS_SRC_ALPHA) << 16))
 #define TRANSP_DEF ((Uint32)GL_ONE + (((Uint32)GL_ONE_MINUS_SRC_ALPHA) << 16))
 
-    //! a utility class for setting the OpenGL transparency function
+    //! a utility class for setting/getting the OpenGL transparency function
     class TranspFunc
     {
 	public:
