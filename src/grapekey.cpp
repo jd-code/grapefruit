@@ -76,9 +76,3 @@ namespace grapefruit
     }
 }
 
-/*
- * $Log: grapekey.cpp,v $
- * Revision 1.1  2003/12/09 17:34:45  jd
- * *** empty log message ***
- *
- */

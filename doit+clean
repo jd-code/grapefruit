@@ -47,10 +47,3 @@ exit 1
 # su "${USERNAME}" -c 'chmod -R a+rX,g+rw /home/drux/htdocs/grapefruit-doc'
 
 
-# $Log: doit+clean,v $
-# Revision 1.3  2004/03/03 22:57:22  jd
-# rebuilding tags after cleanup
-#
-# Revision 1.2  2004/02/21 15:04:35  jd
-# better error handling in doit+clean systems
-#

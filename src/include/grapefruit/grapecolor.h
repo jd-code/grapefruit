@@ -234,22 +234,3 @@ namespace grapefruit
 
 #endif // GRAPECOLOR_H_INC
 
-/*
- * $Log: grapecolor.h,v $
- * Revision 1.5  2004/05/03 22:02:50  jd
- * big merge for mingw/msys and cross-mingw
- *
- * Revision 1.4  2004/03/14 00:24:55  jd
- * documentation updates
- *
- * Revision 1.3  2003/09/06 22:17:16  jd
- * first release of TDs
- *
- * Revision 1.2  2003/05/15 22:42:40  jd
- * added TranspFunc : transparancy functions
- *
- * Revision 1.1.1.1  2003/04/22 14:04:34  jd
- * librarisation of grapfruit
- *
- *
- */

@@ -114,25 +114,3 @@ line (Sdest, li1->x, li1->y, li2->x, li2->y, pixel);
 
 } // namespace grapefruit
 
-/*
- * $Log: graphprim.cpp,v $
- * Revision 1.4  2004/03/14 00:24:55  jd
- * documentation updates
- *
- * Revision 1.3  2003/09/11 23:49:06  jd
- * corrected slow-motion bug in various grabbing code
- * tuned big-motion squiz handling specific to win32 platforms
- * added grabbing code for TDs (first release)
- * added config.h
- *
- * Revision 1.2  2003/05/15 22:44:39  jd
- * tuned polyline
- * tuned includes (sys vs local)
- *
- * Revision 1.1.1.1  2003/04/22 14:04:34  jd
- * librarisation of grapfruit
- *
- * Revision 1.3  2003/04/19 14:58:59  jd
- * first set of cleaning
- *
- */ 
