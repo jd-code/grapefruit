@@ -37,6 +37,8 @@
 namespace grapefruit
 {
 
+    int glreinit (void);
+
     class GLReInit
     {
 	public:
@@ -48,8 +50,6 @@ namespace grapefruit
 
 	friend int glreinit (void);
     };
-
-    int glreinit (void);
 
 #ifdef AGGLREINIT_H_GLOBINST
     GRAPEFRUIT_H_SCOPE list <GLReInit *> GLReInit::lglreinit;

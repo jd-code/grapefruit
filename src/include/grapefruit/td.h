@@ -43,6 +43,7 @@ namespace grapefruit
 {
     class TDObj;
     class TDCompound;
+    class Mvmt;
 
     // --------------- agrume related globals ------------------------------------------------------
 
