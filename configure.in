@@ -159,6 +159,51 @@ dnl	AC_SUBST(GLUT_LIBS)
 dnl explain we want rather c++
 AC_LANG_CPLUSPLUS
 
+dnl check for bzouz template ---------------------------------------------------------
+AC_MSG_CHECKING(for bzouz template)
+have_bzouz=no
+SAVECXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$SAVECXXFLAGS $INCPATH"
+AC_TRY_COMPILE([
+#include <bzouz/bzouz.h>
+],[
+],[
+have_bzouz=yes
+])
+if test x$have_bzouz = xno; then
+    for P_INC in /usr /usr/local "${prefix}"
+    do
+	if test x$have_bzouz = xno; then
+	    echo -n "  ($P_INC :"
+	    CXXFLAGS="$SAVECXXFLAGS $INCPATH -I$P_INC/include"
+	    AC_TRY_COMPILE([
+#include <bzouz/bzouz.h>
+	    ],[
+	    ],[
+	    have_bzouz=yes
+	    ])
+	    if test x$have_bzouz = xyes; then
+		INCPATH="$INCPATH -I$P_INC/include"
+		echo -n " yes.)"
+	    else
+		echo -n " no.)"
+	    fi
+	fi
+    done
+    echo -n " : "
+fi
+CXXFLAGS="$SAVECXXFLAGS"
+AC_MSG_RESULT($have_bzouz)
+if test x$have_bzouz = xyes; then
+    :
+else
+    AC_MSG_ERROR(Unable to find bzouz headers)
+fi
+
+dnl end of check for bzouz template --------------------------------------------------
+
+
+
 dnl check for matcalc template -------------------------------------------------------
 AC_MSG_CHECKING(for matcalc template)
 have_matcalc=no
