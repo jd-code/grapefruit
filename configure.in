@@ -211,5 +211,6 @@ CXXFLAGS="$CXXFLAGS $INCPATH"
 AC_OUTPUT([
 	Makefile
 	src/Makefile
+	grapefruit.dox
 ])
 
