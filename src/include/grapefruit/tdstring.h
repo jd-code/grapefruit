@@ -73,6 +73,7 @@ namespace grapefruit
 	    virtual GLfloat diameter (void);
 
 	    virtual void gotclicked (SDL_Event const &event);
+	    virtual const string & gettdname (void);
     };
 
 } // namespace grapefruit

@@ -270,5 +270,10 @@ bool TDMenu::push_back (TDMenuItem & td)
 	return false ;
 }
 
+const string & TDMenu::gettdname (void)
+{   static string name ("tdmenu");
+    return name;
+}
+
 }   // grapefruit namespace's end...
 
