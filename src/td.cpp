@@ -277,9 +277,15 @@ void TDrender (void)
 	// glFrustum (-windows_h, windows_h, -1.0, 1.0, 5.0, 60.0);     // we use an orthogonal projection
     }
 
+    Mvmt::curtime = SDL_GetTicks ();
+    list<Mvmt*>::iterator lm;
+    for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt.end() ; li++) {
+	(*lm)->step ();
+    }
+
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity ();              // from grapefruit's redrawer
-    
+
     for (li=td_displayed.begin() ; li!=td_displayed.end() ; li++) {
 	TDObj & td = **li;
 	glPushMatrix ();
