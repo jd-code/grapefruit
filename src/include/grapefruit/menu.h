@@ -182,7 +182,8 @@ namespace grapefruit
 	    Vector3 sizesum;		//!< more or less the next coordinate in use for positionning the next menu element
 	    vector<Vector3> vv;		//!< the list of points defining some convex-envelope of our object (here : a box)
 
-	    void compute_all_pos ();	//!< recomputes the positions of each TD component of the menu
+	    void compute_all_pos (void);	//!< recomputes the positions of each TD component of the menu
+	    void compmaxcellssizes (void);	//!< recomputes the max column or max line sizes of the menu
 
 	public:
 	    virtual ~TDMenu (void) {}
@@ -210,6 +211,7 @@ namespace grapefruit
 	    }
 
 	    virtual void render (void);
+	    virtual void renderclickablezone (void); 
 	    virtual void proj_size (Vector3 &offset, Vector3 &size) 
 		{
 		    //::grapefruit::proj_size (offset, size, vv, pos, Vector3 (scale, scale, scale), rm);
