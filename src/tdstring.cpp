@@ -70,10 +70,11 @@ namespace grapefruit
 	sw = v.x, sh = v.y;
 
 	// building the convex-envelope (here : a box)
-	vv.push_back(Vector3(0.0, 0.0, 0.0));
-	vv.push_back(Vector3(0.0, sh,  0.0));
-	vv.push_back(Vector3(sw,  sh,  0.0));
-	vv.push_back(Vector3(sw,  0.0, 0.0));
+	vv.erase (vv.begin(), vv.end());
+	vv.push_back (Vector3 (0.0, 0.0, 0.0));
+	vv.push_back (Vector3 (0.0, sh,  0.0));
+	vv.push_back (Vector3 (sw,  sh,  0.0));
+	vv.push_back (Vector3 (sw,  0.0, 0.0));
     }
     
     void TDString::gotclicked (SDL_Event const &event)
