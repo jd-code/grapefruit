@@ -71,6 +71,7 @@
 #include "grapekey.h"
 #include "glreinit.h"
 #include "graperoute.h"
+#include "cinetic.h"
 #include "td.h"
 #include "glcomp.h"
 #include "glvfont.h"

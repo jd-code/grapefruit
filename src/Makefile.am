@@ -33,6 +33,7 @@ libgrapefruit_la_LDFLAGS = -version-info @lt_major@:@lt_revision@:@lt_age@ @GL_L
 
 
 libgrapefruit_la_SOURCES =  grapefruit.cpp grapekey.cpp graperoute.cpp agrume.cpp   \
+			    cinetic.cpp						    \
 			    td.cpp glvfont.cpp tdstring.cpp menu.cpp		    \
 			    tdfps.cpp						    \
 			    glreinit.cpp					    \
@@ -49,6 +50,7 @@ pkginclude_HEADERS =	include/grapefruit/agrume.h		\
 			include/grapefruit/grapekey.h  		\
 			include/grapefruit/glreinit.h		\
 			include/grapefruit/graperoute.h		\
+			include/grapefruit/cinetic.h		\
 			include/grapefruit/td.h			\
 			include/grapefruit/glvfont.h		\
 			include/grapefruit/glcomp.h		\
