@@ -34,6 +34,7 @@ libgrapefruit_la_LDFLAGS = -version-info @lt_major@:@lt_revision@:@lt_age@ @GL_L
 
 libgrapefruit_la_SOURCES =  grapefruit.cpp grapekey.cpp graperoute.cpp agrume.cpp   \
 			    td.cpp glvfont.cpp tdstring.cpp menu.cpp		    \
+			    glreinit.cpp					    \
 			    graphprim.cpp					    \
 			    graphutils.c jeuchar.c				    \
 			    testdll.c
@@ -45,6 +46,7 @@ pkginclude_HEADERS =	include/grapefruit/agrume.h		\
 			include/grapefruit/grapecolor.h		\
 			include/grapefruit/grapefruit.h		\
 			include/grapefruit/grapekey.h  		\
+			include/grapefruit/glreinit.h		\
 			include/grapefruit/graperoute.h		\
 			include/grapefruit/td.h			\
 			include/grapefruit/glvfont.h		\

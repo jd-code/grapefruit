@@ -440,11 +440,6 @@ namespace grapefruit
 	size = max - min;
     }
 
-    // ----------------------------- vertical placement management ---------------------------------
-    //
-    //
-
-    
 }
 
 
