@@ -78,6 +78,8 @@ namespace grapefruit
 
 	    double posxorigin, posyorigin;
 
+	    list<list<Mvmt*>::iterator> lmvmtid;    //!< our list of active Mvmts, expessed in regard with the global list lmvmt
+
 	public:
 	    bool isglobalactive;    //!< is the TD's renderclickable zone method called globally or locally ? 
 	    Vector3 pos;	    //!< TD's position
@@ -261,7 +263,8 @@ namespace grapefruit
 	    //@}
 
 	friend class TDCompound;
-	friend class TDMenu; //!< TDMenu is friend because we need access to the id_evented
+	friend class TDMenu;	    //!< TDMenu is friend because we need access to the id_evented
+	friend class Mvmt;	    //!< Mvmt accesses to lmvmtid
     };
 
 
