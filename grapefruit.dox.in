@@ -4,7 +4,7 @@
 # General configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = grapefruit
-PROJECT_NUMBER         = 0.0
+PROJECT_NUMBER         = @VERSION@
 OUTPUT_DIRECTORY       = grapefruit-doc
 OUTPUT_LANGUAGE        = English
 EXTRACT_ALL            = YES
