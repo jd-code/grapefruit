@@ -30,6 +30,7 @@
 #define GRAPEFRUIT_H_GLOBINST
 #include "grapefruit.h"
 #undef GRAPEFRUIT_H_GLOBINST
+#include "config.h"
 
 // JDJDJDJD definitions ci-dessous à normaliser...
 #ifndef M_PI
@@ -49,6 +50,16 @@
 
 namespace grapefruit
 {
+
+// returns the release-name of this module
+const char * get_grapefruit_version (void)
+{
+#ifdef BZOUTOTALOCAL
+    return ("Total-Local® " PACKAGE "-" VERSION " $Id$");
+#else
+    return (PACKAGE "-" VERSION " $Id$");
+#endif
+}
 
 //! --------------- shadow generator -------------------------------------------
 //
