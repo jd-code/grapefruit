@@ -257,8 +257,8 @@ void TDMenu::compute_all_pos ()
 
 void TDMenu::change_viewtype (MenuViewType newviewtype, int numcol)
 {
-    list< TDObj * >::iterator ltdi;
-    Vector3 locoffset, locsize;
+    //	list< TDObj * >::iterator ltdi;
+    //	Vector3 locoffset, locsize;
     
     if ((viewType != newviewtype) || ((viewType==INARRAY) && (TDMenu::numcol!= numcol))) {
 	if (newviewtype == INLINE) 
