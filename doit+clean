@@ -3,11 +3,9 @@
 ./doit &&
 echo &&
 echo '=====================================================================' &&
-echo '               compilation + installation done ... cleaning          ' &&
+echo '               compilation + installation done ... documenting       ' &&
 echo '=====================================================================' &&
-echo &&
-settitle 'grapefruit _C__I_[C]_D__I__' &&
-clean4cvs && (
+echo && (
 
 if [ ! "${USERNAME}" ]
 then
@@ -17,9 +15,9 @@ then
     echo
     exit 1
 fi
-
+chmod a+r *.dox
 su "${USERNAME}" -c './dodoc' && exit 0
-) && (   su "${USERNAME}" -c 'clean4cvs'
+) && (   clean4cvs
 	 su "${USERNAME}" -c 'maketags'
 ) >& "/tmp/${USERNAME}.clean4cvs.logs" && exit 0
 echo failed somewhere...................................................
