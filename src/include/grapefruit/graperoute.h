@@ -189,11 +189,17 @@ namespace grapefruit
 	//! who has currently grabbed the mouse
 	GRAPEFRUIT_H_SCOPE PEventCB EventCB::ownergrabmouse = NULL;
 
-	//! the global keydown handler (application specific)
+	//! the global key-down handler (application specific)
 	GRAPEFRUIT_H_SCOPE PEventHandler global_keydownhandler = NULL;
+
+	//! the global key-up handler (application specific)
+	GRAPEFRUIT_H_SCOPE PEventHandler global_keyuphandler = NULL;
 #else
-	//! the global keydown handler (application specific)
+	//! the global key-down handler (application specific)
 	GRAPEFRUIT_H_SCOPE PEventHandler global_keydownhandler;
+
+	//! the global key-up handler (application specific)
+	GRAPEFRUIT_H_SCOPE PEventHandler global_keyuphandler;
 #endif
 
 }
