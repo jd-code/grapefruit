@@ -45,16 +45,42 @@ namespace grapefruit
 {
     // --------------- Action -----------------------------------------------------
     //
-    //! canvas for every and any performable action in our software
+    //! canvas for every and any performable action in our software.
 
     class Action
     {
+     static map<long, Action *> mactions;   //!< the map of all still existing actions, identified by their "unique-in-history" handle.
+     static long n_occur;		    //!< global counter for Actions' handles creations.
+	    long handle;		    //!< the "unique-in-history" handle matching the Action.
 	public:
-	    virtual ~Action (void) {}
-	    virtual void doit (void) = 0;
+	    virtual ~Action (void);
+	    Action (void);
+	    virtual void doit (void) = 0;   //!< the virtual action-code to be performed, by itself.
+	friend class ActionPool;
     };
 
+    // -------------- ActionPool --------------------------------------------------
+    //
+    //! pool of Actions, with cross-existence checking.
 
+    
+    class ActionPool
+    {
+	private:
+	    list<long> l;				//!< the list of Action to trigger.
+	public:
+     static bool warnaboutmissingActions;		//!< must we warn about attempt to use Action that were deleted (default yes)
+	    ActionPool (void) {}
+	    void doit (void);				//!< carefully checks each Action existence before triggering them.
+	    ~ActionPool (void) {}
+	    ActionPool & operator += (const Action & a);	//!< adds an Action at the end of the pool.
+    };
+
+#ifdef GRAPEKEY_H_GLOBINST
+	GRAPEFRUIT_H_SCOPE map<long, Action *> Action::mactions;
+	GRAPEFRUIT_H_SCOPE long Action::n_occur = 0;
+	GRAPEFRUIT_H_SCOPE bool ActionPool::warnaboutmissingActions = true;
+#endif // GRAPEKEY_H_GLOBINST
     
     // --------------- GrapeKeyMapKey ---------------------------------------------
     //
@@ -63,11 +89,11 @@ namespace grapefruit
     class GrapeKeyMapKey
     {
 	    //! this maps unicode chars prior to any other keymap
-	    map <Uint16, Action*> map_unicode;
+	    map <Uint16, ActionPool> map_unicode;
 	    //! this maps SDL scan codes without consideration of modifiers (ALT/CTRL etc...)
-	    map <SDLKey, Action*> map_sdlkey;
+	    map <SDLKey, ActionPool> map_sdlkey;
 	    //! in last resort, this maps SDL scan codes WITH consideration of modifiers (ALT/CTRL etc...)
-	    map <Uint32, Action*> map_sdlkeymod;
+	    map <Uint32, ActionPool> map_sdlkeymod;
 
 	public:
 	    GrapeKeyMapKey ();

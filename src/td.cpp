@@ -277,11 +277,34 @@ void TDrender (void)
 	// glFrustum (-windows_h, windows_h, -1.0, 1.0, 5.0, 60.0);     // we use an orthogonal projection
     }
 
-    Mvmt::curtime = SDL_GetTicks ();
-    list<Mvmt*>::iterator lm;
-    for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt.end() ; lm++) {
-	(*lm)->step ();
+    // ----------------------------- taking care of subscribed Mvmt -------------------------------
+
+    // JDJDJDJD this part should move to cinetic.cpp, no ???
+
+    while (!Mvmt::qfmvmt.empty()) {					// first we do the first-step of all Mvmt newly-inserted...
+	Mvmt &m = *Mvmt::qfmvmt.front();
+	m.firststep();
+	m.lasttime = Mvmt::curtime;					// before time is updated so that their curtime won't be late !
+
+	Mvmt::qfmvmt.pop();
     }
+
+    Mvmt::curtime = SDL_GetTicks ();
+
+    {
+static queue<Mvmt*> qfinish;
+	LPMvmt::iterator lm;
+
+	for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt_end ; lm++) {	// first we step each of the subscribed Mvmt...
+	    if ((*lm)->step () == -1)					// if one finishes...
+		qfinish.push(*lm);					// we'll treat it afterward..
+	}
+	while (!qfinish.empty()) {					// AFTER having stepped ALL the Mvmt...
+	    qfinish.front()->finish();					// we finish the one that ended
+	    qfinish.pop();
+	}
+    }
+
 
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity ();              // from grapefruit's redrawer
