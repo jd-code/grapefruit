@@ -128,7 +128,7 @@ void TDObj::desactivate (void)
     if (id_evented != GRTD_UNDEF) {
 	size_t size = td_evented.size();
 	if (id_evented != size - 1) {	// we move the last TD from the vector to the current position
-	// if (size > 1) {	// we move the last TD from the vector to the current position
+	// if (size > 1)  	// we move the last TD from the vector to the current position
 	    TDObj * last = td_evented [size - 1];
 	    td_evented [id_evented] = last;
 	    last->id_evented = id_evented;
