@@ -72,6 +72,10 @@ namespace grapefruit
 
     class TDMenuItem : public TDObj
     {
+	/** @name TDMenuItem specificities
+	 *  standard template for any menu item
+	 */
+	//@{
 	protected:
 	    TDMenu * ptdmenu;	//!< pointer to the menu which it belongs to
 	    ActionPool paclick;	//!< pointer to the bound ActionPool when clicked
@@ -83,6 +87,7 @@ namespace grapefruit
 	public:
 	    virtual ~TDMenuItem  (void) {}
 	    
+	    //! builds a TDMenuItem bound to the Action ac for click events and also drag events
 	    TDMenuItem (Action & ac) : TDObj ()
 		{
 		    ptdmenu = NULL;
@@ -90,6 +95,7 @@ namespace grapefruit
 		    pagrab  += ac;
 		}
 	    
+	    //! builds a TDMenuItem bound to the Action "aclick" for click, and to the Action "adrag" for drag events
 	    TDMenuItem (Action & aclick, Action & agrab) : TDObj ()
 		{
 		    ptdmenu = NULL;
@@ -99,16 +105,21 @@ namespace grapefruit
 
 
 	friend class TDMenu;
+	//@}
     };
 
 
     // ------------------------- TDMenuItemString -----------------------------------------------------
     //
-    //! standard template for any menu item that is represented by its name 
+    //! standard template for any menu item that is displayed by its name 
     //! \nosubgrouping
 
     class TDMenuItemString : public TDMenuItem
     {
+	/** @name TDMenuItemString specificities
+	 *  standard template for any menu item that is displayed by its name
+	 */
+	//@{
 	private:
 	    string name;
 	    TDString *tds;
@@ -129,6 +140,7 @@ namespace grapefruit
 		    tds = new TDString (s, 0.03);
 		    // JDJDJDJD manque le test de nullité ?
 		}
+	//@}
 
 	    virtual void render (void)
 		{   tds->render();
@@ -153,32 +165,36 @@ namespace grapefruit
 
     class TDMenu : public TDCompound, public TDObjSHable
     {
+	/** @name TDMenu specificities
+	 *  standard template for any menu
+	 */
+	//@{
 	public:
 	    typedef enum {  INLINE,
 			    INCOLUMN,
 			    INARRAY,
 	    } MenuViewType;
 
-	    typedef enum {  STICKY,		// stays on the screen
-			    ONECLICK,   	// disappears after click
-			    ONESHOT		// disappears and is deleted after click
+	    typedef enum {  STICKY,		//!< stays on the screen
+			    ONECLICK,   	//!< disappears after click
+			    ONESHOT		//!< disappears and is deleted after click
 	    } MenuStayType;
 	    
 	private:
-	    string s;			//!< menu's name
-	    MenuStayType stayType;		//!< wether the menu stays or not after a selectionor some clock or loosing focus...
-	    MenuViewType viewType;		//!< the menu's disposition (column, line, array)
-	    GLfloat xpadding;		//!< horizontal space between cells	
-	    GLfloat ypadding;		//!< vertical space between cells	
-	    int numcol;			//!< maximum number of column we can use according to "viewType"
-	    int nbelem;			//!< number of TD-components
-	    vector<GLfloat> maxcolsizes;	//!< max column sizes to display correctly in ARRAY viewtype
-	    vector<GLfloat> maxlinesizes;	//!< max line size to display correctly in ARRAY viewtype
-	    Vector3 sizesum;		//!< more or less the next coordinate in use for positionning the next menu element
-	    vector<Vector3> vv;		//!< the list of points defining some convex-envelope of our object (here : a box)
+	    string s;			    //!< menu's name
+	    MenuStayType stayType;	    //!< wether the menu stays or not after a selectionor some clock or loosing focus...
+	    MenuViewType viewType;	    //!< the menu's disposition (column, line, array)
+	    GLfloat xpadding;		    //!< horizontal space between cells	
+	    GLfloat ypadding;		    //!< vertical space between cells	
+	    int numcol;			    //!< maximum number of column we can use according to "viewType"
+	    int nbelem;			    //!< number of TD-components
+	    vector<GLfloat> maxcolsizes;    //!< max column sizes to display correctly in ARRAY viewtype
+	    vector<GLfloat> maxlinesizes;   //!< max line size to display correctly in ARRAY viewtype
+	    Vector3 sizesum;		    //!< more or less the next coordinate in use for positionning the next menu element
+	    vector<Vector3> vv;		    //!< the list of points defining some convex-envelope of our object (here : a box)
 
-	    void compute_all_pos (void);	//!< recomputes the positions of each TD component of the menu
-	    void compmaxcellssizes (void);	//!< recomputes the max column or max line sizes of the menu
+	    void compute_all_pos (void);    //!< recomputes the positions of each TD component of the menu
+	    void compmaxcellssizes (void);  //!< recomputes the max column or max line sizes of the menu
 
 	public:
 	    virtual ~TDMenu (void) {}
@@ -204,6 +220,8 @@ namespace grapefruit
 	    {
 		s = name;
 	    }
+
+	//@}
 
 	    virtual void render (void);
 	    virtual void renderclickablezone (void); 
