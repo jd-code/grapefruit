@@ -217,6 +217,8 @@ namespace grapefruit
 		    return sqrt(sizesum.x*sizesum.x + sizesum.y*sizesum.y) * scale; //CBCBCB this formula has NOT been checked!!
 		}
 
+	    virtual const string & gettdname (void);
+
 	friend class TDMenuItem;
     };
     //CBCBCB what happens if we erase one element of the menu
