@@ -112,6 +112,22 @@ void commitdeletions (void)
     therearedeletions = false;
 }
 
+bool advertise_unmapped_keys = true;
+
+void report_key (SDL_Event const & event)
+{
+    if (isprint (event.key.keysym.unicode))
+	cout << " [" << (char)(event.key.keysym.unicode) << "] " ;
+    else
+	cout << " [" << event.key.keysym.unicode << "] " ;
+
+    cout << " scancode=" << (int)event.key.keysym.scancode
+	 << " sdlsym=" << event.key.keysym.sym
+	 << " mod=" << event.key.keysym.mod
+	 << " unicode=" << event.key.keysym.unicode
+	 << endl;
+	 ; 
+}
 
 // --------------- GrapeRouteEvent --------------------------------------------
 //
@@ -133,43 +149,21 @@ int GrapeRouteEvent (SDL_Event const & event)
 	    break;
 
 	case SDL_KEYDOWN: 
-	    if (global_keydownhandler != NULL) {
-		if (!global_keydownhandler (event)) {
-		    cout << "[unmapped char pressed]" ;
-		    if (isprint (event.key.keysym.unicode))
-			cout << " [" << (char)(event.key.keysym.unicode) << "] " ;
-		    else
-			cout << " [" << event.key.keysym.unicode << "] " ;
-
-		    cout << " scancode=" << (int)event.key.keysym.scancode
-			 << " sdlsym=" << event.key.keysym.sym
-			 << " mod=" << event.key.keysym.mod
-			 << " unicode=" << event.key.keysym.unicode
-			 << endl;
-			 ; 
-		}
-	    }
-	    //	if ((event.key.keysym.unicode < 0xFF) && (event.key.keysym.unicode > 0)) {
-	    //	    cout << (char)(event.key.keysym.unicode) << flush ;
-	    //	    switch (event.key.keysym.unicode) {
-	    //	        // JDJDJDJD ajouter gestion du focus clavier
-	    //	        case '-':
-	    //	        case 'w':
-	    //	        default:
-	    //	    	break;
-	    //	    }
-	    //	} else {
-	    //	    cout << "[unknown char pressed]"			// JDJDJDJD à enlever...
-	    //	         << " scancode=" << event.key.keysym.scancode
-	    //	         << " sdlsym=" << event.key.keysym.sym
-	    //	         << " mod=" << event.key.keysym.mod
-	    //	         << " unicode=" << event.key.keysym.unicode
-	    //	         << endl;
-	    //	         ; 
-	    //	}
+	    if (global_keydownhandler != NULL)
+		if (!global_keydownhandler (event))
+		    if (advertise_unmapped_keys) {
+			cout << "[unmapped key/char pressed]" ;
+			report_key (event);
+		    }
 	    break;
 
 	case SDL_KEYUP:
+	    if (global_keyuphandler != NULL)
+		if (!global_keyuphandler (event))
+		    if (advertise_unmapped_keys) {
+			cout << "[unmapped key/char released]" ;
+			report_key (event);
+		    }
 	    break;
 
 	case SDL_MOUSEMOTION:
