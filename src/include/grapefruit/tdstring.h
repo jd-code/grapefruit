@@ -34,18 +34,15 @@
 #ifndef TDSTRING_H_HEADER
 #define TDSTRING_H_HEADER
 
-////////#include <grapefruit/grapefruit.h>
-////////
-////////using namespace grapefruit ;
-
 namespace grapefruit
 {
 
     //! a string embedded in some TDObj
     class TDString : public TDObj
     {
-	    string s;
-	    double h;
+	    string s;	    //!< the string content itself
+	    double h;	    //!< JDJDJDJD to be better documented ! is it the heith of the string or what ?
+	    double width;   //!< the line and point width
 
 	    double sh, sw;
 
@@ -62,8 +59,15 @@ namespace grapefruit
 	    TDString (const string &s, double h = 1.0);
 
 	    void update (const string &s);
+
+	    //! sets the color of the TDString
 	    inline void setcolor (Vector4 const & color)
 		{   TDString::color = color;
+		}
+
+	    //! sets the width (float) used for rendering the TDString
+	    inline void setwidth (double width)
+		{   TDString::width = width;
 		}
 
 	    virtual void render (void);
