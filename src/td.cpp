@@ -277,6 +277,7 @@ void TDrender (void)
 	// glFrustum (-windows_h, windows_h, -1.0, 1.0, 5.0, 60.0);     // we use an orthogonal projection
     }
 
+if (0) {
     // ----------------------------- taking care of subscribed Mvmt -------------------------------
 
     // JDJDJDJD this part should move to cinetic.cpp, no ???
@@ -304,7 +305,8 @@ static queue<Mvmt*> qfinish;
 	    qfinish.pop();
 	}
     }
-
+} else
+    Mvmt::hippity ();
 
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity ();              // from grapefruit's redrawer
@@ -488,7 +490,12 @@ void ACDump_td_displayed::doit (void)
     }
     cerr << "------------- " << td_displayed.size() << " elements" << endl ;
 }
-
+const string & ACDump_td_displayed::getacname (void)
+{
+static string name("ACDump_td_displayed");
+    return name;
+}
+ 
 //! returns a random integer in the set :  [1;max]      [CB]
 inline int randint ( int max) { return 1+(int) ((double)max * rand()/(RAND_MAX+1.0));}
 
@@ -507,6 +514,11 @@ void ACScramble_td_displayed::doit (void)
     r = (int) ((double)size * rand()/(RAND_MAX+1.0));
     for (i=0, li=td_displayed.begin() ; (i<r) && (li!=td_displayed.end()) ; li++, i++);
     p->show(**li);
+}
+const string & ACScramble_td_displayed::getacname (void)
+{
+static string name("ACScramble_td_displayed");
+    return name;
 }
 
 }   // grapefruit namespace's end...

@@ -37,6 +37,8 @@ namespace grapefruit
 
 	    TDObj * ptd;				    //!< the td we move
 
+     static void hippity (void);    // JDJDJDJD mettre un nom plus digne plus tard...
+
 	public:
 	    ActionPool pa_finish;			    //!< the Action to be performed at finishing the Mvmt
 
@@ -49,7 +51,7 @@ namespace grapefruit
 
 	friend void TDrender (void);
 
-	friend inline LPMvmt::iterator getlmvmtend (void) { return lmvmt.end(); };	// JDJDJDJD probably not safe on all STLs
+     static inline LPMvmt::iterator getlmvmtend (void) { return lmvmt.end(); };	// JDJDJDJD probably not safe on all STLs
     };
 
     class Mv_Spin : public Mvmt
@@ -66,12 +68,13 @@ namespace grapefruit
     };
 
 #ifdef AGCINETIC_H_GLOBINST
-    GRAPEFRUIT_H_SCOPE LPMvmt Mvmt::lmvmt;				    //!< the global list of Mvmt who subscrided
-    GRAPEFRUIT_H_SCOPE LPMvmt::iterator Mvmt::lmvmt_end = getlmvmtend ();   //!< the end of the lmvmt list (JDJDJDJD cf above)
-    GRAPEFRUIT_H_SCOPE QPMvmt Mvmt::qfmvmt;				    //!< the global queue of Mvmt subscrided to their first step
+    GRAPEFRUIT_H_SCOPE LPMvmt Mvmt::lmvmt;					//!< the global list of Mvmt who subscrided
+    GRAPEFRUIT_H_SCOPE LPMvmt::iterator Mvmt::lmvmt_end = Mvmt::getlmvmtend ();	//!< the end of the lmvmt list (JDJDJDJD cf above)
+    GRAPEFRUIT_H_SCOPE QPMvmt Mvmt::qfmvmt;					//!< the global queue of Mvmt's first step
     GRAPEFRUIT_H_SCOPE Uint32 Mvmt::curtime = 0;
 #endif
     
 }   // namespace grapefruit
 
 #endif	// AGCINETIC_H_HEADER
+

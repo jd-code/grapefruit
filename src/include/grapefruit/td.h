@@ -279,8 +279,10 @@ namespace grapefruit
 
     class ACTDHide : public Action
     {
+	    string name;
 	    TDObj * ptd;
 	public:
+	    virtual ~ACTDHide(void) {}
 	    ACTDHide (TDObj * p)
 		{   ptd = p;
 		}
@@ -290,14 +292,21 @@ namespace grapefruit
 		    if (ptd->isshown ())
 			ptd->hide ();
 		}
+	    virtual const string & getacname (void)
+		{   if (name.size() == 0)
+			name = ptd->gettdname() + "->ACTDHide";
+		    return name;
+		}
     };
 
     //! Action for showing and activating some TDObj
 
     class ACTDShow : public Action
     {
+	    string name;
 	    TDObj * ptd;
 	public:
+	    virtual ~ACTDShow(void) {}
 	    ACTDShow (TDObj * p)
 		{   ptd = p;
 		}
@@ -308,14 +317,21 @@ namespace grapefruit
 		    if (!ptd->isactivated ())
 			ptd->activate ();
 		}
+	    virtual const string & getacname (void)
+		{   if (name.size() == 0)
+			name = ptd->gettdname() + "->ACTDShow";
+		    return name;
+		}
     };
 
     //! Action for toggling some TDObj
 
     class ACTDToggle : public Action
     {
+	    string name;
 	    TDObj * ptd;
 	public:
+	    virtual ~ACTDToggle(void) {}
 	    ACTDToggle (TDObj * p)
 		{   ptd = p;
 		}
@@ -330,6 +346,11 @@ namespace grapefruit
 			if (!ptd->isactivated ())
 			    ptd->activate ();
 		    }
+		}
+	    virtual const string & getacname (void)
+		{   if (name.size() == 0)
+			name = ptd->gettdname() + "->ACTDToggle";
+		    return name;
 		}
     };
 
@@ -420,16 +441,18 @@ namespace grapefruit
     //! this Action dumps the ordered content of td_displayed for debugging purpose
     class ACDump_td_displayed : public Action
     {	public:
+	    virtual ~ACDump_td_displayed () {}
 	    virtual void doit ();
-	    ~ACDump_td_displayed () {}
+	    virtual const string & getacname (void);
     };
 
     //! this Action takes one displayed TD and puts it on top of another displayed TD.
     //! it is intended for testing purpose (say with mixed GL rendering states, for example)
     class ACScramble_td_displayed : public Action
     {	public:
+	    virtual ~ACScramble_td_displayed () {}
 	    virtual void doit ();
-	    ~ACScramble_td_displayed () {}
+	    virtual const string & getacname (void);
     };
 
     // ----------------------------- size calculation utils ----------------------------------------
