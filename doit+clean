@@ -1,0 +1,56 @@
+#!/bin/sh
+
+./doit &&
+echo &&
+echo '=====================================================================' &&
+echo '               compilation + installation done ... cleaning          ' &&
+echo '=====================================================================' &&
+echo &&
+settitle 'grapefruit _C__I_[C]_D__I__' &&
+clean4cvs && (
+
+if [ ! "${USERNAME}" ]
+then
+    echo
+    echo could not determine USERNAME variable, halted...
+    echo
+    echo
+    exit 1
+fi
+
+su "${USERNAME}" -c './dodoc' && exit 0
+) && (   su "${USERNAME}" -c 'clean4cvs'
+	 su "${USERNAME}" -c 'maketags'
+) >& "/tmp/${USERNAME}.clean4cvs.logs" && exit 0
+echo failed somewhere...................................................
+echo "silently cleaning anyway with clean4cvs (logs are in /tmp/${USERNAME}.clean4cvs.logs)"
+(   su "${USERNAME}" -c 'clean4cvs'
+    su "${USERNAME}" -c 'maketags'
+) >& "/tmp/${USERNAME}.clean4cvs.logs"
+echo clean4cvs done.
+exit 1
+# su "${USERNAME}" -c 'configure-jd --prefix=/usr' &&
+# su "${USERNAME}" -c maketags
+# echo &&
+# echo '=====================================================================' &&
+# echo '               installation + cleaning done ...                      ' &&
+# echo '=====================================================================' &&
+# echo &&
+# settitle 'grapefruit _C__I__C_[D]_I__' &&
+# rm -rf grapefruit-doc
+# su "${USERNAME}" -c 'doxygen grapefruit.dox'
+# settitle 'grapefruit _C__I__C__D_[I]_' &&
+# su "${USERNAME}" -c 'rm -rf /home/drux/htdocs/grapefruit-doc-bak'
+# su "${USERNAME}" -c 'mv /home/drux/htdocs/grapefruit-doc /home/drux/htdocs/grapefruit-doc-bak'
+# su "${USERNAME}" -c 'mv grapefruit-doc /home/drux/htdocs/grapefruit-doc'
+# su "${USERNAME}" -c 'cp doxygen/background.png /home/drux/htdocs/grapefruit-doc/html'
+# su "${USERNAME}" -c 'chmod -R a+rX,g+rw /home/drux/htdocs/grapefruit-doc'
+
+
+# $Log: doit+clean,v $
+# Revision 1.3  2004/03/03 22:57:22  jd
+# rebuilding tags after cleanup
+#
+# Revision 1.2  2004/02/21 15:04:35  jd
+# better error handling in doit+clean systems
+#
