@@ -1,5 +1,5 @@
 ## 
-## $Id: Makefile.am,v 1.2 2003/04/22 16:39:28 jd Exp $
+## $Id$
 ## GrapeFruit Copyright (C) 2002 Cristelle Barillon, Jean-Daniel PAUGET
 ## A whole set graphical utilities for SDL
 ## 
