@@ -47,9 +47,9 @@ namespace grapefruit
 
 	    double sh, sw;
 
-	    // JDJDJDJD fausse cinematique temporaire !!!!
-	    double vra;	// vitesse de rotation angulaire
-	    double angrot;	// angle de rotation
+	    //	// JDJDJDJD fausse cinematique temporaire !!!!
+	    //	double vra;	// vitesse de rotation angulaire
+	    //	double angrot;	// angle de rotation
 
 	    vector<Vector3> vv; //!< the list of points defining some convex-envelope of our object (here : a box)
 
