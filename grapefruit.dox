@@ -149,7 +149,7 @@ SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
 # Configuration::addtions related to external references   
 #---------------------------------------------------------------------------
-TAGFILES               = grapefruit-doc/matcalc.tag=http://drux.local/matcalc-doc/html
+TAGFILES               = grapefruit-doc/matcalc.tag=http://drux.disjunkt.com/matcalc-doc/html
 GENERATE_TAGFILE       = grapefruit-doc/html/grapefruit.tag
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES
