@@ -16,7 +16,8 @@ namespace grapefruit
     
     void Mvmt::start (void)
     {	
-	lmvmt_id = lmvmt.insert (lmvmt_end, this);
+	lmvmt_id = lmvmt.insert (lmvmt.end(), this);
+	//lmvmt_id = lmvmt.insert (lmvmt_end, this);
 	lmvmt_idtdid = ptd->lmvmtid.insert ( ptd->lmvmtid.end(), lmvmt_id);
     }
     
@@ -36,7 +37,10 @@ namespace grapefruit
     Mv_Spin::Mv_Spin (TDObj &td, Vector3 &axis, GLfloat speed, Uint32 duration) : Mvmt (td)
     {	speed1k = (2.0 * M_PI * speed) / 1000.0;
 	Mv_Spin::axis = axis;
-	t_end = curtime + duration;
+	if (duration != 0)
+	    t_end = curtime + duration;
+	else
+	    t_end = 0;
     }
 
     int Mv_Spin::step (void)
@@ -46,6 +50,7 @@ namespace grapefruit
 	
 	Uint32 dt = curtime - lasttime;
 	ptd->rotate (axis, speed1k * dt);
+	lasttime = curtime;
 	return 0;
     }
 }

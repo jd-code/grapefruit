@@ -24,7 +24,7 @@ namespace grapefruit
 	public:
 	protected:
      static LPMvmt lmvmt;				    //!< the list of movement who subscrided
-     static LPMvmt::iterator lmvmt_end;			    //!< the end of the lmvmt list (for speed ? is it safe on all platform JDJDJDJD?)
+     static LPMvmt::iterator lmvmt_end;			    //!< the end of the lmvmt list (for speed? is it safe on all platform JDJDJDJD?)
 	    LPMvmt::iterator lmvmt_id;			    //!< our id in the lmvmt list
 	    list<LPMvmt::iterator>::iterator lmvmt_idtdid;  //!< our id in the bound-to-us-td's list of mvmt
 
@@ -57,7 +57,7 @@ namespace grapefruit
 
 #ifdef AGCINETIC_H_GLOBINST
     GRAPEFRUIT_H_SCOPE LPMvmt Mvmt::lmvmt;  //!< the list of movement we subscrided to
-    GRAPEFRUIT_H_SCOPE LPMvmt::iterator lmvmt_end = getlmvmtend ();
+    GRAPEFRUIT_H_SCOPE LPMvmt::iterator Mvmt::lmvmt_end = getlmvmtend ();
     GRAPEFRUIT_H_SCOPE Uint32 Mvmt::curtime = 0;
 #endif
     

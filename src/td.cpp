@@ -279,7 +279,7 @@ void TDrender (void)
 
     Mvmt::curtime = SDL_GetTicks ();
     list<Mvmt*>::iterator lm;
-    for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt.end() ; li++) {
+    for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt.end() ; lm++) {
 	(*lm)->step ();
     }
 
