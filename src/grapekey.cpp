@@ -1,5 +1,5 @@
 /* 
- * $Id: grapekey.cpp,v 1.1 2003/12/09 17:34:45 jd Exp $
+ * $Id$
  * GrapeFruit Copyright (C) 2002,2003 Cristelle Barillon & Jean-Daniel Pauget
  * a whole set of graphical utilities for SDL
  *

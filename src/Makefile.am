@@ -1,5 +1,5 @@
 ## 
-## $Id: Makefile.am,v 1.6 2004/05/03 22:02:50 jd Exp $
+## $Id$
 ## GrapeFruit Copyright (C) 2002 Cristelle Barillon, Jean-Daniel PAUGET
 ## A whole set of bouncing balls
 ## 

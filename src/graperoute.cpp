@@ -1,5 +1,5 @@
 /* 
- * $Id: graperoute.cpp,v 1.15 2004/03/14 00:24:55 jd Exp $
+ * $Id$
  * GrapeFruit Copyright (C) 2002,2003 Cristelle Barillon & Jean-Daniel Pauget
  * a whole set of graphical utilities for SDL
  *

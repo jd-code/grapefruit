@@ -1,5 +1,5 @@
 /* 
- * $Id: menu.h,v 1.9 2004/03/13 16:36:05 cristelle Exp $
+ * $Id$
  * Loopsoids Copyright (C) 2002,2003 Cristelle Barillon & Jean-Daniel Pauget
  * some people say loopsoids creations can tell the future
  *
