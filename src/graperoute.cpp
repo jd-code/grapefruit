@@ -112,8 +112,6 @@ void commitdeletions (void)
     therearedeletions = false;
 }
 
-bool advertise_unmapped_keys = true;
-
 void report_key (SDL_Event const & event)
 {
     if (isprint (event.key.keysym.unicode))
