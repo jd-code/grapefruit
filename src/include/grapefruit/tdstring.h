@@ -38,7 +38,7 @@ namespace grapefruit
 {
 
     //! a string embedded in some TDObj
-    class TDString : public TDObj
+    class TDString : virtual public TDObj
     {
 	    string s;	    //!< the string content itself
 	    double h;	    //!< JDJDJDJD to be better documented ! is it the heith of the string or what ?
