@@ -41,9 +41,8 @@ namespace grapefruit
     {	mactions.erase(handle);
     }
 
-    const string & Action::getacname (void)
-    {
-static string name ("  -- Unamed Action --");
+    string Action::getacname (void)
+    {	string name ("  -- Unamed Action --");
 	return name;
     }
 

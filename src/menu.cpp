@@ -12,9 +12,8 @@ namespace grapefruit
 // ------------------------- ActionTest -----------------------------------------------------------
 //
 
-const string & ActionTest::getacname (void)
-{
-static string name("ActionTest");
+string ActionTest::getacname (void)
+{   string name("ActionTest");
     return name;
 }
     
