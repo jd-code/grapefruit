@@ -119,22 +119,3 @@ namespace grapefruit
 
 #endif // GLCOMP_H_HEADER
 
-/*
- * $Log: glcomp.h,v $
- * Revision 1.2  2004/05/03 22:02:50  jd
- * big merge for mingw/msys and cross-mingw
- *
- * Revision 1.1  2004/01/20 15:41:53  jd
- * massive librarization around menu, stdstrings etc
- *
- * Revision 1.6  2003/10/23 22:12:36  cristelle
- * first functionnal draft of TDMenu/TDMenuItem/Action
- *
- * Revision 1.5  2003/10/21 22:42:42  jd
- * *** empty log message ***
- *
- * Revision 1.4  2003/10/20 21:24:19  jd
- * small tdstring split
- *
- *
- */

@@ -23,33 +23,6 @@
  *
  * ------------------------------------------------------------------------------
  *
- * $Log: jeuchar.c,v $
- * Revision 1.2  2003/04/22 16:39:28  jd
- * small libtool revision info tuning
- *
- * Revision 1.1.1.1  2003/04/22 14:04:34  jd
- * librarisation of grapfruit
- *
- * Revision 1.1.0.8  2001/01/02 17:31:53  jd
- * added maximum bapeteq
- *
- * Revision 1.1.0.7  1999/05/11 15:31:13  jd
- * passage a l'affichage des hits
- *
- * Revision 1.1.0.6  1998/03/11  23:41:23  jd
- * added multipart, corrected stamp and x-axis overload-effects
- *
- * Revision 1.1.0.5  1998/03/11  16:20:25  jd
- * added dynamic log entries
- *
- * Revision 1.1.0.4  1998/03/09  23:19:06  jd
- * temporary check
- *
- * Revision 1.1.0.3  1998/03/09  21:29:06  jd
- * study version/OSF1
- *
- * Revision 1.1.0.2  1998/03/09  21:14:36  jd
- * rcs/version
  *
  */
 

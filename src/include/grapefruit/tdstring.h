@@ -79,23 +79,3 @@ namespace grapefruit
     
 #endif //  TDSTRING_H_HEADER
 
-/*
- * $Log: tdstring.h,v $
- * Revision 1.3  2004/03/14 00:24:55  jd
- * documentation updates
- *
- * Revision 1.2  2004/03/01 18:05:02  jd
- * corrected "pure virtual method called" bug (paradigm : never call a virtual function in destructors)
- *
- * Revision 1.1  2004/01/20 15:41:53  jd
- * massive librarization around menu, stdstrings etc
- *
- * Revision 1.2  2003/12/09 17:32:01  jd
- * added TDAudio(s) objects family for visually controlling audio structures
- *
- * Revision 1.1  2003/10/20 21:24:19  jd
- * small tdstring split
- *
- *
- */
-

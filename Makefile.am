@@ -42,14 +42,3 @@ vimtestw32: all
 ## DISTCLEANFILES = ./src/GrapeFruit.exe ./src/stderr.txt ./src/stdout.txt
 
 
-## 
-##  $Log: Makefile.am,v $
-##  Revision 1.2  2003/04/22 16:39:28  jd
-##  small libtool revision info tuning
-##
-##  Revision 1.1.1.1  2003/04/22 14:04:34  jd
-##  librarisation of grapfruit
-##
-## 
-
-

@@ -520,11 +520,3 @@ Vector3 compute_string_size (const string &s, double addstep)
     //! @}
 }
 
-/*
- * $Log: glvfont.cpp,v $
- * Revision 1.2  2004/03/03 23:02:29  jd
- * partial stepping vs size bug correction (not finished)
- *
- *
- */
-

@@ -489,33 +489,3 @@ SDL_Surface * Create32bSurface (Uint32 flags, int width, int height)
 //	        }
 //	}
 
-
-/*
- * $Log: graphutils.c,v $
- * Revision 1.4  2004/05/03 22:02:50  jd
- * big merge for mingw/msys and cross-mingw
- *
- * Revision 1.3  2003/05/15 22:47:22  jd
- * includes tuning
- *
- * Revision 1.2  2003/04/22 16:39:28  jd
- * small libtool revision info tuning
- *
- * Revision 1.1.1.1  2003/04/22 14:04:34  jd
- * librarisation of grapfruit
- *
- * Revision 1.4  2003/04/11 22:57:32  jd
- * miscs about gcc 2.95 -> 3.2
- * clipping added in various graphical primitives (to be enhanced in polyxxx)
- * agrume extensions
- *
- * Revision 1.2  2003/04/03 00:02:04  jd
- * added AlphaMaxBlit : mixing two alpha layers
- *
- * Revision 1.6  2003/03/18 23:25:54  jd
- * some line capabilities added
- *
- * Revision 1.1  2002/12/16 23:25:52  jd
- * addition of graphutils, embryo of a small graph lib
- *
- */

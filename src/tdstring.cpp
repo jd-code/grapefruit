@@ -223,22 +223,3 @@ namespace grapefruit
 
 };
 
-/*
- * $Log: tdstring.cpp,v $
- * Revision 1.1  2004/01/20 15:41:53  jd
- * massive librarization around menu, stdstrings etc
- *
- * Revision 1.4  2003/12/09 17:32:01  jd
- * added TDAudio(s) objects family for visually controlling audio structures
- *
- * Revision 1.3  2003/10/23 22:12:37  cristelle
- * first functionnal draft of TDMenu/TDMenuItem/Action
- *
- * Revision 1.2  2003/10/21 22:42:42  jd
- * *** empty log message ***
- *
- * Revision 1.1  2003/10/20 21:24:19  jd
- * small tdstring split
- *
- *
- */
