@@ -189,12 +189,18 @@ namespace grapefruit
 	//! who has currently grabbed the mouse
 	GRAPEFRUIT_H_SCOPE PEventCB EventCB::ownergrabmouse = NULL;
 
+	//! do we warn about unmapped keys
+	GRAPEFRUIT_H_SCOPE bool advertise_unmapped_keys = true;
+
 	//! the global key-down handler (application specific)
 	GRAPEFRUIT_H_SCOPE PEventHandler global_keydownhandler = NULL;
 
 	//! the global key-up handler (application specific)
 	GRAPEFRUIT_H_SCOPE PEventHandler global_keyuphandler = NULL;
 #else
+	//! do we warn about unmapped keys
+	GRAPEFRUIT_H_SCOPE bool advertise_unmapped_keys;
+
 	//! the global key-down handler (application specific)
 	GRAPEFRUIT_H_SCOPE PEventHandler global_keydownhandler;
 
