@@ -110,7 +110,7 @@ TDMenu::TDMenu () : TDCompound ()
     vv.insert (vv.end(), 4, Vector3());
 }
 
-
+#define SHOW_CLICKABLE_ZONE false
 void TDMenu::render (void)
 {
     TDCompound::render();
@@ -140,7 +140,82 @@ void TDMenu::render (void)
 	glDisable (GL_LINE_SMOOTH);
 	glBlendFunc (GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
     }
+    if (SHOW_CLICKABLE_ZONE) {
+	glMaterialfv (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,    (GLfloat *) GLRGBA_BLACK );
+	glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR,		    (GLfloat *) GLRGBA_BLACK );
+	glMateriali  (GL_FRONT_AND_BACK, GL_SHININESS, 128); 
+	glMaterialfv (GL_FRONT_AND_BACK, GL_EMISSION,		    (GLfloat *) GLRGBA_RED);
+	glShadeModel (GL_FLAT);
+	
+	glEnable (GL_POINT_SMOOTH);
+	glEnable (GL_LINE_SMOOTH);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE);
+	glLineWidth (1.0);
+	glPointSize (1.0);
+	glDepthMask (GL_FALSE);
+    
+	renderclickablezone ();
+
+	glDepthMask (GL_TRUE);
+	glDisable (GL_LINE_SMOOTH);
+	glBlendFunc (GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
+    }
 }
+
+void TDMenu::compmaxcellssizes (void)
+{
+    list <TDObj*> :: iterator li;
+    int i, loccolnum, linenum;
+    Vector3 locoffset, locsize;
+    
+    if (!maxcolsizes.empty())
+	    maxcolsizes.erase(maxcolsizes.begin(), maxcolsizes.end());
+	if (!maxlinesizes.empty())
+	    maxlinesizes.erase(maxlinesizes.begin(), maxlinesizes.end());
+	// recompute maxcolsize and maxlinesize
+	for (li=TDCompound::ltd.begin(), i=0; (li!=TDCompound::ltd.end())  ;i++, li++) {
+	    loccolnum = i % TDMenu::numcol;
+	    linenum   = i / TDMenu::numcol;
+	    (*li)->proj_size (locoffset, locsize);
+	    
+	    // we update the maxcolsize (maximum column sizes) vector 
+	    if (((int)maxcolsizes.size() < TDMenu::numcol) )  
+		maxcolsizes.push_back (fabs(locsize.x));
+	     else
+		if ( maxcolsizes[loccolnum]<fabs(locsize.x))
+		    maxcolsizes[loccolnum]=fabs(locsize.x);
+	    // we update the maxlinesize (maximum line sizes) vector
+	    if (loccolnum == 0)
+		maxlinesizes.push_back (fabs(locsize.y));
+	     else
+		if ( maxlinesizes[linenum] < fabs(locsize.y)) 
+		    maxlinesizes[linenum] = fabs(locsize.y);
+	}
+
+}
+
+void TDMenu::renderclickablezone (void)
+{
+    list <TDObj*> :: iterator li;
+    int i, loccolnum, linenum;
+    Vector3 locoffset, locsize;
+    
+    for (li=ltd.begin(), i=0; li!=ltd.end() ; li++, i++) {
+        TDObj & td = **li;
+        glLoadName (td.id_evented);
+	loccolnum = i % TDMenu::numcol;
+	linenum   = i / TDMenu::numcol;
+	(*li)->proj_size (locoffset, locsize);
+	
+	glBegin (GL_POLYGON);
+	glVertex2f (td.pos.x + locoffset.x , td.pos.y + locoffset.y);
+	glVertex2f (td.pos.x + locoffset.x , td.pos.y + locoffset.y + maxlinesizes [linenum  ]);
+	glVertex2f (td.pos.x + locoffset.x + maxcolsizes  [loccolnum],  td.pos.y + locoffset.y + maxlinesizes [linenum  ]);
+	glVertex2f (td.pos.x + locoffset.x + maxcolsizes  [loccolnum],  td.pos.y + locoffset.y );
+	glEnd();
+    }
+}
+
 
 void TDMenu::compute_all_pos () 
 {
@@ -184,38 +259,15 @@ void TDMenu::change_viewtype (MenuViewType newviewtype, int numcol)
 {
     list< TDObj * >::iterator ltdi;
     Vector3 locoffset, locsize;
-    int loccolnum, linenum;
-    int i;
+    
     if ((viewType != newviewtype) || ((viewType==INARRAY) && (TDMenu::numcol!= numcol))) {
 	if (newviewtype == INLINE) 
 	    TDMenu::numcol = nbelem+1;
 	else	
 	    TDMenu::numcol = numcol;
 
-	if (!maxcolsizes.empty())
-	    maxcolsizes.erase(maxcolsizes.begin(), maxcolsizes.end());
-	if (!maxlinesizes.empty())
-	    maxlinesizes.erase(maxlinesizes.begin(), maxlinesizes.end());
-	// recompute maxcolsize and maxlinesize
-	for (ltdi=TDCompound::ltd.begin(), i=0; (ltdi!=TDCompound::ltd.end())  ;i++, ltdi++) {
-	    loccolnum = i % TDMenu::numcol;
-	    linenum   = i / TDMenu::numcol;
-	    (*ltdi)->proj_size (locoffset, locsize);
-	    
-	    // we update the maxcolsize (maximum column sizes) vector 
-	    if (((int)maxcolsizes.size() < TDMenu::numcol) )  
-		maxcolsizes.push_back (fabs(locsize.x));
-	     else
-		if ( maxcolsizes[loccolnum]<fabs(locsize.x))
-		    maxcolsizes[loccolnum]=fabs(locsize.x);
-	    // we update the maxlinesize (maximum line sizes) vector
-	    if (loccolnum == 0)
-		maxlinesizes.push_back (fabs(locsize.y));
-	     else
-		if ( maxlinesizes[linenum] < fabs(locsize.y)) 
-		    maxlinesizes[linenum] = fabs(locsize.y);
+	compmaxcellssizes (); 
      
-	}
 	viewType = newviewtype;
 	compute_all_pos ();
     }
@@ -280,37 +332,9 @@ bool TDMenu::push_back (TDMenuItem & td)
 	return false ;
 }
 
-void TDMenu::td_was_updated ( TDObj & td)	//!< actions to perform if a celle was updated (e.g. recompute calls positions)
+void TDMenu::td_was_updated ( TDObj & td)	//!< actions to perform if a cell was updated (e.g. recompute calls positions)
 {
-    list< TDObj * >::iterator ltdi;
-    Vector3 locoffset, locsize;
-    int loccolnum, linenum;
-    int i;
-      
-    if (!maxcolsizes.empty())
-	maxcolsizes.erase(maxcolsizes.begin(), maxcolsizes.end());
-    if (!maxlinesizes.empty())
-	maxlinesizes.erase(maxlinesizes.begin(), maxlinesizes.end());
-    
-    // recompute maxcolsize and maxlinesize
-    for (ltdi=TDCompound::ltd.begin(), i=0; (ltdi!=TDCompound::ltd.end())  ;i++, ltdi++) {
-	loccolnum = i % TDMenu::numcol;
-	linenum   = i / TDMenu::numcol;
-	(*ltdi)->proj_size (locoffset, locsize);
-	
-	// we update the maxcolsize (maximum column sizes) vector 
-	if (((int)maxcolsizes.size() < TDMenu::numcol) )  
-	    maxcolsizes.push_back (fabs(locsize.x));
-	 else
-	    if ( maxcolsizes[loccolnum]<fabs(locsize.x))
-		maxcolsizes[loccolnum]=fabs(locsize.x);
-	// we update the maxlinesize (maximum line sizes) vector
-	if (loccolnum == 0)
-	    maxlinesizes.push_back (fabs(locsize.y));
-	 else
-	    if ( maxlinesizes[linenum] < fabs(locsize.y)) 
-		maxlinesizes[linenum] = fabs(locsize.y);
-    }
+    compmaxcellssizes ();
     compute_all_pos();
 }
 
@@ -320,5 +344,7 @@ const string & TDMenu::gettdname (void)
     return name;
 }
 
-}   // grapefruit namespace's end...
+}  // grapefruit namespace's end...
+     
+     
 

@@ -261,6 +261,7 @@ namespace grapefruit
 	    //@}
 
 	friend class TDCompound;
+	friend class TDMenu; //!< TDMenu is friend because we need access to the id_evented
     };
 
 
