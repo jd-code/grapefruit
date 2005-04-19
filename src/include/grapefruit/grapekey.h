@@ -35,12 +35,6 @@
 #ifndef GRAPEKEY_H_INC
 #define GRAPEKEY_H_INC
 
-// #ifndef KMOD_ALL
-// #define KMOD_ANY    0xfffe  //!< grapefruit extension to SDLMod : equals any of the possible modifiers
-// #else
-// #error	cannot over-define KMOD_ANY, this must be dig out...
-// #endif // KMOD_ALL
-
 namespace grapefruit
 {
     // --------------- Action -----------------------------------------------------

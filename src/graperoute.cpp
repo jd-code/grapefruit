@@ -363,9 +363,6 @@ int MGrabber::endgrabber (SDL_Event const & event)
 
 CaptionZone::CaptionZone (int* x, int *y) : MGrabber ()
 {   Px = x, Py = y;
-
-////    warpcoordvalid = false;
-////    modebefore = SDL_GRAB_QUERY;
 }
 
 void CaptionZone::activate (Agrume & agrume, SDL_Rect const & rdst)
@@ -379,99 +376,6 @@ void CaptionZone::grabberchange (SDL_Event const & event)
     valuechange ();
 }
 
-////	int CaptionZone::MOUSEMOTION (SDL_Event const & event)
-////	{   
-////	#ifdef JDDEBUGMOTION
-////	    bzouzerr << "debug motion : " << event.motion.x << ":" << event.motion.y << "   "
-////				      << event.motion.xrel << ":" << event.motion.yrel << endl ;
-////	#endif
-////	
-////	    if ((event.motion.xrel != 0) || (event.motion.yrel !=0)) {
-////	#ifdef BUILD_FOR_WIN32
-////		if ((event.motion.yrel < 50) && (event.motion.xrel < 50)){   // JDJDJDJD with win32 we have a huge drift at starting
-////									     // grabbing the mouse - we may in the future use the trick
-////									     // of avoiding treating mouse warps this way ?
-////	#endif
-////	//	    SDL_WarpMouse(xorigin, yorigin);
-////		    *Px += event.motion.xrel,
-////		    *Py += event.motion.yrel;
-////		    sdx += event.motion.xrel,
-////		    sdy += event.motion.yrel;
-////		    valuechange ();
-////	#ifdef BUILD_FOR_WIN32
-////		}
-////	#endif
-////	    }
-////	    return 0;
-////	}
-////	
-////	int CaptionZone::LOOSEMOUSEBUTTONFOCUS (SDL_Event const & event)    // maybe RotButton should inherit this part ???
-////	{
-////	// bzouzerr << "modebofore=" << ((modebefore==SDL_GRAB_ON) ? "SDL_GRAB_ON" : "pas SDL_GRAB_ON") << endl ;
-////	    SDL_WM_GrabInput (modebefore);
-////	    modebefore = SDL_GRAB_QUERY;
-////	    SDL_ShowCursor (SDL_ENABLE);
-////	    if (warpcoordvalid) {		    // we move after showing or it might bug
-////		xorigin += sdx, yorigin += sdy;
-////		if (xorigin < 0)
-////		    xorigin = 0;
-////		else if (xorigin > screen->w)
-////		    xorigin = screen->w -1;
-////		
-////		if (yorigin < 0)
-////		    yorigin = 0;
-////		else if (yorigin > screen->h)
-////		    yorigin = screen->h -1;
-////		
-////		SDL_WarpMouse(xorigin, yorigin);
-////	    }
-////	    ownergrabmouse = NULL;
-////	    warpcoordvalid = false;
-////	
-////	    return 0;
-////	}
-////	
-////	int CaptionZone::MOUSEBUTTONDOWN (SDL_Event const & event)
-////	{
-////	    xorigin = event.button.x;
-////	    yorigin = event.button.y;
-////	    sdx = 0, sdy = 0;
-////	    warpcoordvalid = true;
-////	
-////	    if (modebefore == SDL_GRAB_QUERY)
-////		modebefore = SDL_WM_GrabInput (SDL_GRAB_QUERY);
-////	
-////	// bzouzerr << "SDL_GRAB_ON" << endl ;
-////	    SDL_WM_GrabInput (SDL_GRAB_ON);
-////	    SDL_ShowCursor (SDL_DISABLE);
-////	    ownergrabmouse = (PEventCB)this;
-////	    return 0;
-////	}
-////	
-////	int CaptionZone::MOUSEBUTTONUP (SDL_Event const & event)
-////	{
-////	// bzouzerr << "modebofore=" << ((modebefore==SDL_GRAB_ON) ? "SDL_GRAB_ON" : "pas SDL_GRAB_ON") << endl ;
-////	    SDL_WM_GrabInput (modebefore);
-////	    modebefore = SDL_GRAB_QUERY;
-////	    SDL_ShowCursor(SDL_ENABLE);	// we display the cursor before moving it ot it might bug....
-////	    if (warpcoordvalid) {
-////		xorigin += sdx, yorigin += sdy;
-////		if (xorigin < 0)
-////		    xorigin = 0;
-////		else if (xorigin > screen->w)
-////		    xorigin = screen->w -1;
-////		
-////		if (yorigin < 0)
-////		    yorigin = 0;
-////		else if (yorigin > screen->h)
-////		    yorigin = screen->h -1;
-////		
-////		SDL_WarpMouse(xorigin, yorigin);
-////	    }
-////	    warpcoordvalid = false;
-////	    ownergrabmouse = NULL;
-////	    return 0;
-////	}
 
 CaptionZone::~CaptionZone (void)
 {   // JDJDJDJD emptiness to be checked...
