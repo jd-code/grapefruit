@@ -457,35 +457,3 @@ SDL_Surface * Create32bSurface (Uint32 flags, int width, int height)
 }
 
 
-//	void GAputstr (Pgifscreen moi, int x, int y, int coul, unsigned char *texte)
-//	{       int t,g;
-//	        if (texte == NULL) return;
-//	
-//	        while (*texte != 0)
-//	        {       for (t=0 ; t<16 ; t++)
-//	/*              if (((t+y)>=0) && ((t+y)<moi->height)) */
-//	                {       for (g=0 ; g<8 ; g++)
-//	/*                      if (((x+g)>=0) && ((x+g)<moi->width)) */
-//	                        if (HIPjeuchar[(int)(*texte)][t] & (0x80 >> g)) moi->buf [x+g+(t+y)*moi->width] =
-//	                }
-//	                texte ++;
-//	                x += 8;
-//	        }
-//	}
-//	
-//	void GAputstrvert (Pgifscreen moi, int x, int y, int coul, unsigned char *texte)
-//	{       int t,g;
-//	        if (texte == NULL) return;
-//	
-//	        while (*texte != 0)
-//	        {       for (t=0 ; t<16 ; t++)
-//	/*              if (((x+t)>=0) && ((x+t)<moi->width)) */
-//	                {       for (g=0 ; g<8 ; g++)
-//	/*                      if (((y-g)>=0) && ((y-g)<moi->height)) */
-//	                        if (HIPjeuchar[(int)(*texte)][t] & (0x80 >> g)) moi->buf [x+t+(y-g)*moi->width] =
-//	                }
-//	                texte ++;
-//	                y -= 8;
-//	        }
-//	}
-

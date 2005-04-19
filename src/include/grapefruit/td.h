@@ -52,16 +52,6 @@ namespace grapefruit
     GRAPEFRUIT_H_SCOPE vector <TDObj *> td_evented;		//!< the list of currently eventizabled TDs
     GRAPEFRUIT_H_SCOPE GLfloat convert2Dto3Ddx, convert2Dto3Ddy;//!< the stored dx,dy factors for 2D-3D coordinates conversion utilities
 
-////////#ifdef	AGTD_H_GLOBINST
-////////    list <TDObj *> td_displayed;   
-////////    vector <TDObj *> td_evented;   
-////////    GLfloat convert2Dto3Ddx, convert2Dto3Ddy;
-////////#else
-////////    extern list <TDObj *> td_displayed;			//!< the ordered list of currently displayed TDs
-////////    extern vector <TDObj *> td_evented;			//!< the list of currently eventizabled TDs
-////////    extern GLfloat convert2Dto3Ddx, convert2Dto3Ddy;	//!< the stored dx,dy factors for 2D-3D coordinates conversion utilities
-////////#endif	// AGTD_H_GLOBINST
-
 #define GRTD_UNDEF 65000
     
     // ----------------------------- TDObj ---------------------------------------------------------

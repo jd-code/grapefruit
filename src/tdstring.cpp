@@ -43,8 +43,6 @@ namespace grapefruit
 	TDString::s = s;
 	Vector3 v = compute_string_size (s, 0.5);
 	sw = v.x, sh = v.y;
-//	vra = 0.0;
-//	angrot = 0.0;
 	isgrabbable = true;
 	color = GLRGBA_WHITE;
 	width = 1.2;
@@ -76,34 +74,14 @@ namespace grapefruit
     }
     
     void TDString::gotclicked (SDL_Event const &event)
-    {	// vra = 2.0*M_PI / 80.0;
+    {
 	if (event.type == SDL_MOUSEBUTTONUP) {
-//	    GLfloat x, y;
-//	    grapefruit::convert2Dto3D  (event.button.x, event.button.y, x, y);
-//	    if (x - pos.x > 0.0)
-//		vra = 2.0*M_PI / 75.0;
-//	    else
-//		vra = -2.0*M_PI / 75.0;
+	    // we used to have some old fashion rotation code here
 	}
     }
 
     void TDString::render (void)
     {	
-	// JDJD bad cinematic code
-	//if (vra != 0.0) {
-	//    // rotate (Vector3 (0.0, 1.0, 0.0), vra);
-	//    Vector3 v(0.1, 0.8, 0.2);
-	//    v /= v.norm();
-	//    rotate (v, vra);
-	//    angrot += vra;
-
-	//    if ((angrot >= 6.0 * M_PI) || (angrot <= -6.0 * M_PI)) {
-	//	vra = 0.0;
-	//	angrot = 0.0;
-	//    }
-	//}
-	// JDJD end of bad cinematic code*
-
 	glPushAttrib(   GL_LIGHTING_BIT |   // glMaterialfv, glShadeModel
 		    GL_COLOR_BUFFER_BIT |   // glBlendFunc
 			    GL_LINE_BIT |   // GL_LINE_SMOOTH glLineWidth
@@ -200,11 +178,6 @@ namespace grapefruit
 	    v.y *= h;
 	    v.z *= 1.0;
 	    v = rm * v;
-	    //	v += Vector3(-0.5 * sw, -0.5 * sh, 0.0);
-	    //	v.x = vi->x * h;
-	    //	v.y = vi->y * h;
-	    //	v.z = vi->z * 1.0;
-	    //	v = rm * v;
 
 	    if (v.x < min.x) min.x = v.x;
 	    if (v.y < min.y) min.y = v.y;

@@ -30,6 +30,11 @@ using namespace grapefruit ;
 namespace grapefruit
 {
 
+
+
+// ------------------------- TDObj ----------------------------------------------------------------
+// 
+
 TDObj::~TDObj (void)
 {   
     if (id_displayed != td_displayed.end())
@@ -60,12 +65,12 @@ void TDObj::show (void)
 	GLfloat diam = diameter ();
 	list<TDObj *>::iterator li;
     int i=0;
-	for (li = td_displayed.begin() ; li != id_displayed ; li++, i++)
+	for (li = td_displayed.begin() ; li != id_displayed ; li++, i++)    // JDJDJDJD we may reach END !!!!!
 	    (*li)->pos.z -= diam;
 	// pos.z = -1.0 + diam / 2.0;	    // the initial top-z value should be tunable JDJDJDJD
 	pos.z = -15.0 - diam / 2.0;	    // the initial top-z value should be tunable JDJDJDJD
     } else
-	bzouzerr << "TDObj::show : called when already displayed ?" << endl ;
+	bzouzerr << "called when already displayed ?" << endl ;
 }
 
 void TDObj::show (TDObj const & td)
@@ -81,7 +86,7 @@ void TDObj::show (TDObj const & td)
 	    (*li)->pos.z -= diam;
 	pos.z = td.pos.z + diam / 2.0;	// just on top of td
     } else
-	bzouzerr << "TDObj::show : called when already displayed ?" << endl ;
+	bzouzerr << "called when already displayed ?" << endl ;
 }
 
 void TDObj::hide (GLfloat diam)
@@ -99,7 +104,7 @@ void TDObj::hide (void)
     if (id_displayed != td_displayed.end()) {
 	hide (diameter ());
     } else
-	bzouzerr << "TDObj::hide : called when not already displayed ?" << endl ;
+	bzouzerr << "called when not already displayed ?" << endl ;
 }
 
 void TDObj::hideindestructor (void)
@@ -115,7 +120,7 @@ void TDObj::hideindestructor (void)
 
 	hide (  2.0*(pos.z - (*pi)->pos.z) - (*pi)->diameter()  );
     } else
-	bzouzerr << "TDObj::hide : called when not already displayed ?" << endl ;
+	bzouzerr << "called when not already displayed ?" << endl ;
 }
 
 void TDObj::activate (bool isglobalactive)
@@ -125,7 +130,7 @@ void TDObj::activate (bool isglobalactive)
 	id_evented = td_evented.size();
 	td_evented.push_back (this);
      } else
-	bzouzerr << "TDObj::activate : called when already displayed ?" << endl ;
+	bzouzerr << "called when already displayed ?" << endl ;
 }
 
 void TDObj::desactivate (void)
@@ -141,13 +146,67 @@ void TDObj::desactivate (void)
 	td_evented.pop_back();
 	id_evented = GRTD_UNDEF;
     } else
-	bzouzerr << "TDObj::desactivate : called when not already displayed ?" << endl ;
+	bzouzerr << "called when not already displayed ?" << endl ;
 }
 
 void TDObj::rotate (Vector3 const & v, double angle)
 {
      rm = rm * Matrix4 (v, angle);
 }
+
+
+// TDObj * lastselected = NULL;
+
+//  void TDObj::gotselected (void)
+//  {   if (lastselected != NULL)
+//  	lastselected->gotdeselected ();
+//      lastselected = this;
+//      isselected = true;
+//  }
+//  
+//  void TDObj::gotdeselected (void)
+//  {
+//      lastselected = NULL;
+//      isselected = false;
+//  }
+
+void TDObj::grabberchange (SDL_Event const & event)
+{
+    GLfloat x, y, dx, dy;
+    convert2Dto3D (0,0 , x,y , dx,dy);
+    if (isgrabbable) {
+	pos.x += event.motion.xrel * dx;
+	pos.y += event.motion.yrel * dy;
+    }
+}
+
+int TDObj::startgrabber (SDL_Event const & event)
+{   
+    posxorigin = pos.x;
+    posyorigin = pos.y;
+    return MGrabber::startgrabber (event);  // JDJDJDJD la souris disparait au click, ce serait mieux de ne la faire disparaitre
+					    // que si l'on est grabbable
+}
+
+int TDObj::endgrabber (SDL_Event const & event)
+{   
+    if (abs (sdx) + abs (sdy) < 5) {
+	if (isgrabbable) {
+	    pos.x = posxorigin;
+	    pos.y = posyorigin;
+	}
+	//  if (isselected)
+	//      gotdeselected ();
+	//  else
+	//      gotselected ();
+	int r = MGrabber::endgrabber (event);
+	gotclicked (event); // JDJDJDJD ce serait bien de tester si le relachement a lieu sur l'objet lui-meme pour valider les clicks
+	return r;
+    }
+    return MGrabber::endgrabber (event);
+}
+
+
 
 
 // ------------------------- TDCompound -----------------------------------------------------------
@@ -260,7 +319,7 @@ const string & TDCompound::gettdname (void)
 
 void TDrender (void)
 {
-    list <TDObj *>::iterator li;
+    Mvmt::hippity ();		// we take care of subscribed Mvmt
 
     double windows_h = (GLfloat) screen->h / (GLfloat) screen->w;
     glMatrixMode ( GL_PROJECTION ); // from grapefruit's redrawer
@@ -277,40 +336,11 @@ void TDrender (void)
 	// glFrustum (-windows_h, windows_h, -1.0, 1.0, 5.0, 60.0);     // we use an orthogonal projection
     }
 
-if (0) {
-    // ----------------------------- taking care of subscribed Mvmt -------------------------------
 
-    // JDJDJDJD this part should move to cinetic.cpp, no ???
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity ();              // from grapefruit's redrawer
 
-    while (!Mvmt::qfmvmt.empty()) {					// first we do the first-step of all Mvmt newly-inserted...
-	Mvmt &m = *Mvmt::qfmvmt.front();
-	m.firststep();
-	m.lasttime = Mvmt::curtime;					// before time is updated so that their curtime won't be late !
-
-	Mvmt::qfmvmt.pop();
-    }
-
-    Mvmt::curtime = SDL_GetTicks ();
-
-    {
-static queue<Mvmt*> qfinish;
-	LPMvmt::iterator lm;
-
-	for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt_end ; lm++) {	// first we step each of the subscribed Mvmt...
-	    if ((*lm)->step () == -1)					// if one finishes...
-		qfinish.push(*lm);					// we'll treat it afterward..
-	}
-	while (!qfinish.empty()) {					// AFTER having stepped ALL the Mvmt...
-	    qfinish.front()->finish();					// we finish the one that ended
-	    qfinish.pop();
-	}
-    }
-} else
-    Mvmt::hippity ();
-
-glMatrixMode(GL_MODELVIEW);
-glLoadIdentity ();              // from grapefruit's redrawer
-
+    list <TDObj *>::iterator li;
     for (li=td_displayed.begin() ; li!=td_displayed.end() ; li++) {
 	TDObj & td = **li;
 	glPushMatrix ();
@@ -348,6 +378,7 @@ void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx, GLfloat
 	y = (GLfloat) ye * dy + 1.0 ;
     }
 }
+
 
 EventCB * TDrenderclickablezone (int xe, int ye)
 {
@@ -415,56 +446,8 @@ glLoadIdentity ();              // from grapefruit's redrawer
     return td_evented [name];
 }
 
-// TDObj * lastselected = NULL;
-
-//  void TDObj::gotselected (void)
-//  {   if (lastselected != NULL)
-//  	lastselected->gotdeselected ();
-//      lastselected = this;
-//      isselected = true;
-//  }
-//  
-//  void TDObj::gotdeselected (void)
-//  {
-//      lastselected = NULL;
-//      isselected = false;
-//  }
-
-void TDObj::grabberchange (SDL_Event const & event)
-{
-    GLfloat x, y, dx, dy;
-    convert2Dto3D (0,0 , x,y , dx,dy);
-    if (isgrabbable) {
-	pos.x += event.motion.xrel * dx;
-	pos.y += event.motion.yrel * dy;
-    }
-}
-
-int TDObj::startgrabber (SDL_Event const & event)
-{   
-    posxorigin = pos.x;
-    posyorigin = pos.y;
-    return MGrabber::startgrabber (event);  // JDJDJDJD la souris disparait au click, ce serait mieux de ne la faire disparaitre
-					    // que si l'on est grabbable
-}
-
-int TDObj::endgrabber (SDL_Event const & event)
-{   
-    if (abs (sdx) + abs (sdy) < 5) {
-	if (isgrabbable) {
-	    pos.x = posxorigin;
-	    pos.y = posyorigin;
-	}
-	//  if (isselected)
-	//      gotdeselected ();
-	//  else
-	//      gotselected ();
-	int r = MGrabber::endgrabber (event);
-	gotclicked (event); // JDJDJDJD ce serait bien de tester si le relachement a lieu sur l'objet lui-meme pour valider les clicks
-	return r;
-    }
-    return MGrabber::endgrabber (event);
-}
+// ------------------------- ACDump_td_displayed --------------------------------------------------
+// 
 
 void ACDump_td_displayed::doit (void)
 {   list <TDObj *>::iterator li;
@@ -490,13 +473,17 @@ void ACDump_td_displayed::doit (void)
     }
     cerr << "------------- " << td_displayed.size() << " elements" << endl ;
 }
+
+
 string ACDump_td_displayed::getacname (void)
 {   string name("ACDump_td_displayed");
     return name;
 }
  
-//! returns a random integer in the set :  [1;max]      [CB]
-inline int randint ( int max) { return 1+(int) ((double)max * rand()/(RAND_MAX+1.0));}
+
+
+// ------------------------- ACScramble_td_displayed ----------------------------------------------
+// 
 
 void ACScramble_td_displayed::doit (void)
 {
@@ -514,6 +501,8 @@ void ACScramble_td_displayed::doit (void)
     for (i=0, li=td_displayed.begin() ; (i<r) && (li!=td_displayed.end()) ; li++, i++);
     p->show(**li);
 }
+
+
 string ACScramble_td_displayed::getacname (void)
 {   string name("ACScramble_td_displayed");
     return name;
