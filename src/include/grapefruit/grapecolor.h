@@ -83,13 +83,6 @@ namespace grapefruit
     GRAPEFRUIT_H_SCOPE SDL_PixelFormat DefaultPixelFormat = initDefaultPixelFormat ();
 #endif // GRAPECOLOR_H_GLOBINST
 
-////////#ifndef   GRAPECOLOR_H_GLOBINST
-////////    extern SDL_PixelFormat DefaultPixelFormat;
-////////#else
-////////    //! grapefruit's default SDL pixel format.
-////////    SDL_PixelFormat DefaultPixelFormat = initDefaultPixelFormat ();
-////////#endif // GRAPECOLOR_H_GLOBINST
-
 
     // --------------- RGBColor/RGBAColor -----------------------------------------
     //
@@ -175,37 +168,6 @@ namespace grapefruit
 	    }
     };
 #define RGBA_TRBLACK 0x0UL
-
-// JDJDJDJD some old function that need to become members of the previous classes
-//
-//	static inline int tolow (int i, int n)
-//	{   int nn;
-//	    for (nn=0 ; nn<n ; nn++)
-//		i = (  (i << 1) ) / 3;
-//	    return i;
-//	}
-//	static inline int tohi (int i, int n)
-//	{   int nn;
-//	    for (nn=0 ; nn<n ; nn++)
-//		i = i + ((255-i) >> 2);
-//	    return i;
-//	}
-//	
-//	Uint32 tolow (SDL_PixelFormat *format, RGBColor & c, Uint8 alpha, int n = 1)
-//	{   return SDL_MapRGBA (format,
-//				tolow (c.r, n),
-//				tolow (c.g, n),
-//				tolow (c.b, n),
-//				alpha);
-//	}
-//	
-//	Uint32 tohi (SDL_PixelFormat *format, RGBColor & c, Uint8 alpha, int n = 1)
-//	{   return SDL_MapRGBA (format,
-//				tohi (c.r, n),
-//				tohi (c.g, n),
-//				tohi (c.b, n),
-//				alpha);
-//	}
 
 // #define TRANSP_DEF ((Uint32)GL_SRC_ALPHA + (((Uint32)GL_SRC_COLOR) << 16))
 // #define TRANSP_DEF ((Uint32)GL_DST_ALPHA + (((Uint32)GL_ONE_MINUS_SRC_ALPHA) << 16))

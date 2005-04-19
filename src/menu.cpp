@@ -46,22 +46,6 @@ void TDMenuItem::gotclicked (SDL_Event const &event)
 	    paclick.doit();
     }
 }
-//void TDMenuItem::gotclicked (SDL_Event const &event) 
-//{
-//    if (ptdmenu != NULL) {
-//	if (ptdmenu->stayType == TDMenu::ONECLICK) {
-//	    ptdmenu->desactivate ();
-//	    ptdmenu->hide ();
-//	}
-//	if (ptdmenu->stayType == TDMenu::ONESHOT) {
-//	    ptdmenu->desactivate ();
-//	    ptdmenu->hide ();
-//	    delete (ptdmenu);
-//	}
-//    } else
-//	bzouzerr << " we have here a ptdmenu that is NULL ????" << endl ;
-//    paclick->doit();
-//}
 
 // ------------------------- TDMenuItemString
 
@@ -87,11 +71,6 @@ TDMenu::TDMenu (const string &s, MenuViewType viewType, MenuStayType stayType, i
     xpadding = 0.03;
     ypadding = 0.015;
     vv.insert (vv.end(), 4, Vector3());
-    // JDJDJDJD to be removed iif the previous line is ok...
-    //	vv.push_back(Vector3(0.0, 0.0, 0.0));
-    //	vv.push_back(Vector3(0.0, 0.0, 0.0));
-    //	vv.push_back(Vector3(0.0, 0.0, 0.0));
-    //	vv.push_back(Vector3(0.0, 0.0, 0.0));
 }
 
 TDMenu::TDMenu (const string &s) : TDCompound ()
@@ -265,9 +244,6 @@ void TDMenu::compute_all_pos ()
 
 void TDMenu::change_viewtype (MenuViewType newviewtype, int numcol)
 {
-    //	list< TDObj * >::iterator ltdi;
-    //	Vector3 locoffset, locsize;
-    
     if ((viewType != newviewtype) || ((viewType==INARRAY) && (TDMenu::numcol!= numcol))) {
 	if (newviewtype == INLINE) 
 	    TDMenu::numcol = nbelem+1;

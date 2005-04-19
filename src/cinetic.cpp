@@ -40,8 +40,6 @@ namespace grapefruit
     {
     // ----------------------------- taking care of subscribed Mvmt -------------------------------
 
-    // JDJDJDJD this part should move to cinetic.cpp, no ???
-
     while (!Mvmt::qfmvmt.empty()) {					// first we do the first-step of all Mvmt newly-inserted...
 	Mvmt &m = *Mvmt::qfmvmt.front();
 	m.firststep();
