@@ -32,12 +32,19 @@ namespace grapefruit
 
 
 
+// ------------------------- Scene ----------------------------------------------------------------
+// 
+
+Scene::Scene (void)
+{   bzouzerr << "on est passé par ici.." << endl ;
+}
+
 // ------------------------- TDObj ----------------------------------------------------------------
 // 
 
 TDObj::~TDObj (void)
 {   
-    if (id_displayed != td_displayed.end())
+    if (id_displayed != td_notdispd)
 	hideindestructor ();
 
     if (mouseflyover == this)	// JDJDJDJD maybe we should check that mousebuttonfocus and ownergrabmouse need the same treatment ?
@@ -58,10 +65,12 @@ const string & TDObj::gettdname (void)
 
 void TDObj::show (void)
 {
-    if (id_displayed == td_displayed.end()) {
-	td_displayed.push_back (this);
-	id_displayed = td_displayed.end();
-	id_displayed --;
+//    if (id_displayed == td_displayed.end()) {
+//	td_displayed.push_back (this);
+//	id_displayed = td_displayed.end();
+//	old this above is equivalent old-code.......}
+    if (id_displayed == td_notdispd) {
+	id_displayed = td_displayed.insert (td_displayed.end(), this);
 	GLfloat diam = diameter ();
 	list<TDObj *>::iterator li;
     int i=0;
@@ -75,7 +84,7 @@ void TDObj::show (void)
 
 void TDObj::show (TDObj const & td)
 {
-    if (id_displayed == td_displayed.end()) {
+    if (id_displayed == td_notdispd) {
 	list<TDObj *>::iterator  ni = td.id_displayed;
 	ni ++;
 	id_displayed = td_displayed.insert (ni, this);
@@ -96,12 +105,12 @@ void TDObj::hide (GLfloat diam)
     for (li = td_displayed.begin() ; li != id_displayed ; li++)
 	(*li)->pos.z += diam;
     td_displayed.erase (id_displayed);
-    id_displayed = td_displayed.end();
+    id_displayed = td_notdispd;
 }
 
 void TDObj::hide (void)
 {  
-    if (id_displayed != td_displayed.end()) {
+    if (id_displayed != td_notdispd) {
 	hide (diameter ());
     } else
 	bzouzerr << "called when not already displayed ?" << endl ;
@@ -109,7 +118,7 @@ void TDObj::hide (void)
 
 void TDObj::hideindestructor (void)
 {  
-    if (id_displayed != td_displayed.end()) {
+    if (id_displayed != td_notdispd) {
 	if (id_displayed == td_displayed.begin()) {
 	    hide (0.0); // we're at the bottom of the list, diameter doesn't matter
 	    return;
@@ -214,7 +223,7 @@ int TDObj::endgrabber (SDL_Event const & event)
 
 TDCompound::~TDCompound (void)
 {
-    if (id_displayed != td_displayed.end())
+    if (id_displayed != td_notdispd)
 	hideindestructor ();
 
     if (id_evented != GRTD_UNDEF)
