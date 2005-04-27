@@ -42,18 +42,50 @@
 
 namespace grapefruit
 {
+    class Scene;
     class TDObj;
     class TDCompound;
     class Mvmt;
 
     // --------------- agrume related globals ------------------------------------------------------
 
+    // JDJDJDJD ces deux là disparaissent dans Scene
     GRAPEFRUIT_H_SCOPE list <TDObj *> td_displayed;		//!< the ordered list of currently displayed TDs
     GRAPEFRUIT_H_SCOPE vector <TDObj *> td_evented;		//!< the list of currently eventizabled TDs
+
     GRAPEFRUIT_H_SCOPE GLfloat convert2Dto3Ddx, convert2Dto3Ddy;//!< the stored dx,dy factors for 2D-3D coordinates conversion utilities
 
+    GRAPEFRUIT_H_SCOPE list <Scene *> scene_displayed;		//!< the ordered list of curently displayed scenes
+    
 #define GRTD_UNDEF 65000
     
+    // ----------------------------- Scene ---------------------------------------------------------
+    //
+    //! a 3D Scene for displaying TDObj s
+    //! \nosubgrouping
+
+    class Scene
+    {
+	public:
+	      list <TDObj *> td_displayed;	    //!< the ordered list of currently displayed TDs
+	    vector <TDObj *> td_evented;	    //!< the list of currently eventizabled TDs
+       static list <TDObj *> globdummy;		    //!< this list is used to build the global undefined iterator "td_notdispd"
+
+	    Scene ();
+
+    };
+
+#ifdef GRAPEFRUIT_H_GLOBINST
+    GRAPEFRUIT_H_SCOPE Scene DefaultOrthScene;
+    GRAPEFRUIT_H_SCOPE Scene & cur_scene = DefaultOrthScene;
+    GRAPEFRUIT_H_SCOPE list <TDObj *> Scene::globdummy;
+    GRAPEFRUIT_H_SCOPE list <TDObj *>::iterator td_notdispd = Scene::globdummy.end();	
+#else
+    GRAPEFRUIT_H_SCOPE Scene DefaultOrthScene;
+    GRAPEFRUIT_H_SCOPE Scene & cur_scene;
+    GRAPEFRUIT_H_SCOPE list <TDObj *>::iterator td_notdispd;
+#endif
+
     // ----------------------------- TDObj ---------------------------------------------------------
     //
     //! a 3D object with facilities for placing conveniently and also tikkling with the mouse
@@ -63,7 +95,7 @@ namespace grapefruit
     {
 	private:
 	    size_t id_evented;			    //!< our id in the list of evented TDs, or GRTD_UNDEF if not evented
-	    list<TDObj *>::iterator id_displayed;   //!< our id in the list of displayed TDs, or GRTD_UNDEF if not displayed
+	    list<TDObj *>::iterator id_displayed;   //!< our id in the list of displayed TDs, or td_notdispd if not displayed
 
 	    TDCompound * ptdparent;		    //!< a pointer to a TD to which we are linked, our coordinates are relative to it
 	    list<TDObj*>::iterator id_ltdparent;    //!< our id in our parent's list ; valid only if we have a parent
@@ -87,7 +119,7 @@ namespace grapefruit
 	    inline TDObj (void) : MGrabber ()
 		{   rm.setident ();
 		    id_evented = GRTD_UNDEF,
-		    id_displayed = td_displayed.end();
+		    id_displayed = td_notdispd;
 		    // isselected = false;
 		    scale = 1.0;
 		    isgrabbable = false;
@@ -104,7 +136,7 @@ namespace grapefruit
 
 	    //! returns weither the TD is already shown or not ?
 	    inline bool isshown (void)
-		{   return (id_displayed != td_displayed.end());
+		{   return (id_displayed != td_notdispd);
 		}
 
 	    //! returns weither the TD is already evented (active) ?
