@@ -42,6 +42,7 @@
 
 namespace grapefruit
 {
+    class View;
     class Scene;
     class TDObj;
     class TDCompound;
@@ -50,12 +51,13 @@ namespace grapefruit
     // --------------- agrume related globals ------------------------------------------------------
 
     // JDJDJDJD ces deux là disparaissent dans Scene
-    GRAPEFRUIT_H_SCOPE list <TDObj *> td_displayed;		//!< the ordered list of currently displayed TDs
-    GRAPEFRUIT_H_SCOPE vector <TDObj *> td_evented;		//!< the list of currently eventizabled TDs
+    // GRAPEFRUIT_H_SCOPE list <TDObj *> td_displayed;		//!< the ordered list of currently displayed TDs
+    // GRAPEFRUIT_H_SCOPE vector <TDObj *> td_evented;		//!< the list of currently eventizabled TDs
 
     GRAPEFRUIT_H_SCOPE GLfloat convert2Dto3Ddx, convert2Dto3Ddy;//!< the stored dx,dy factors for 2D-3D coordinates conversion utilities
 
-    GRAPEFRUIT_H_SCOPE list <Scene *> scene_displayed;		//!< the ordered list of curently displayed scenes
+    GRAPEFRUIT_H_SCOPE list <View *> view_displayed;		//!< the ordered list of curently displayed View
+    GRAPEFRUIT_H_SCOPE list <View *> view_evented;		//!< the ordered list of curently eventizabled View
     
 #define GRTD_UNDEF 65000
     
@@ -72,7 +74,8 @@ namespace grapefruit
        static list <TDObj *> globdummy;		    //!< this list is used to build the global undefined iterator "td_notdispd"
 
 	    Scene ();
-
+	    void render (void);			    //!< fully renders the scene and its displayed TDObj
+	    void renderclickablezone (void);	    //!< renders all _activated_ TDObj of this scene
     };
 
 #ifdef GRAPEFRUIT_H_GLOBINST
@@ -86,6 +89,66 @@ namespace grapefruit
     GRAPEFRUIT_H_SCOPE list <TDObj *>::iterator td_notdispd;
 #endif
 
+    // ----------------------------- View ----------------------------------------------------------
+    //
+    //! a screen representation of a Scene
+    //! \nosubgrouping
+
+    class View
+    {
+	    list <View *>::iterator id_displayed;	    //!< our id in the list of displayed views
+	    list <View *>::iterator id_evented;		    //!< our id in the list of eventizabled views
+	public:
+	    Scene & scene;			    	    //!< the scene we gonna render
+
+       GLint x, y;				    	    //!< the lower left corner of the viewport rectangle
+       GLsizei w, h;				    	    //!< the width and height of the viewport
+
+       GLdouble left,				    	    //!< the coordinate for the left vertical clipping plane
+		right,				    	    //!< the coordinate for the right vertical clipping plane
+		bottom,				    	    //!< the coordinate for the bottom horizontal clipping plane
+		top,				    	    //!< the coordinate for the top horizontal clipping plane
+		near_val,			    	    //!< Specify the distance to the nearer depth clipping plane
+						    	    //!< (negative if the plane is t be behindthe viewer)
+		far_val;			    	    //!< Specify the distance to the farther depth clipping plane
+       
+	    View (Scene & s = cur_scene) :
+		id_displayed(view_displayed.end()),
+		id_evented(view_evented.end()),
+		scene(s)
+		{}
+
+	    virtual void render (void) = 0;		    //!< fully renders the scene and its displayed TDObj
+	    virtual EventCB * renderclickablezone (int xe, int ye) = 0;    //!< fully renders the scene and its displayed TDObj
+
+	    void show (void);				    //!< adds the view on top of the list of displayed views
+	    void show (View const & v);		    	    //!< inserts the View in the list of displayed View, right before the View v
+	    void show_above (View const & v);	    	    //!< inserts the View in the list of displayed View, right after the View v
+	    void hide (void);			    	    //!< removes the View from the list of displayed View
+
+	    void activate (void);			    //!< adds the view on top of the list of eventizabled views
+	    void activate (View const & v);		    //!< inserts the View in the list of eventizabled View, right before the View v
+	    void activate_above (View const & v);	    //!< inserts the View in the list of eventizabled View, right after the View v
+	    void desactivate (void);			    //!< removes the View from the list of eventizabled View
+
+	friend class ACDump_td_displayed;
+    };
+
+    class ViewOrtho : public View
+    {
+	public:
+	    ViewOrtho (Scene & s = cur_scene) : View (s)
+		{}
+	    virtual void render (void);
+	    virtual EventCB * renderclickablezone (int xe, int ye);
+	    void setsizes (GLint screen_x, GLint screen_y, GLsizei screen_w, GLsizei screen_h,
+			   GLdouble scene_left,	GLdouble scene_right,
+			   GLdouble scene_bottom,	GLdouble scene_top,  
+			   GLdouble scene_near, GLdouble scene_far);
+	    void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx, GLfloat &dy);
+			   
+    };
+
     // ----------------------------- TDObj ---------------------------------------------------------
     //
     //! a 3D object with facilities for placing conveniently and also tikkling with the mouse
@@ -94,7 +157,9 @@ namespace grapefruit
     class TDObj : public virtual MGrabber
     {
 	private:
+	    vector <TDObj *> &td_evented;	    //!< the list of currently eventizabled TDs in the scene we belong to
 	    size_t id_evented;			    //!< our id in the list of evented TDs, or GRTD_UNDEF if not evented
+	    list<TDObj *> &td_displayed;	    //!< the ordered list of currently displayed TDs in the scene we belong to
 	    list<TDObj *>::iterator id_displayed;   //!< our id in the list of displayed TDs, or td_notdispd if not displayed
 
 	    TDCompound * ptdparent;		    //!< a pointer to a TD to which we are linked, our coordinates are relative to it
@@ -116,7 +181,7 @@ namespace grapefruit
 
 	    virtual ~TDObj (void);
 
-	    inline TDObj (void) : MGrabber ()
+	    inline TDObj (void) : MGrabber (), td_evented(cur_scene.td_evented), td_displayed(cur_scene.td_displayed)
 		{   rm.setident ();
 		    id_evented = GRTD_UNDEF,
 		    id_displayed = td_notdispd;
