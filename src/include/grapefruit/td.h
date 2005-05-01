@@ -54,6 +54,7 @@ namespace grapefruit
     // GRAPEFRUIT_H_SCOPE list <TDObj *> td_displayed;		//!< the ordered list of currently displayed TDs
     // GRAPEFRUIT_H_SCOPE vector <TDObj *> td_evented;		//!< the list of currently eventizabled TDs
 
+    // JDJDJDJD ceux la disparaissent dans View::convert2Dto3D
     GRAPEFRUIT_H_SCOPE GLfloat convert2Dto3Ddx, convert2Dto3Ddy;//!< the stored dx,dy factors for 2D-3D coordinates conversion utilities
 
     GRAPEFRUIT_H_SCOPE list <View *> view_displayed;		//!< the ordered list of curently displayed View
@@ -101,8 +102,8 @@ namespace grapefruit
 	public:
 	    Scene & scene;			    	    //!< the scene we gonna render
 
-       GLint x, y;				    	    //!< the lower left corner of the viewport rectangle
-       GLsizei w, h;				    	    //!< the width and height of the viewport
+       GLint vx, vy;				    	    //!< the lower left corner of the viewport rectangle
+       GLsizei vw, vh;				    	    //!< the width and height of the viewport
 
        GLdouble left,				    	    //!< the coordinate for the left vertical clipping plane
 		right,				    	    //!< the coordinate for the right vertical clipping plane
@@ -532,6 +533,7 @@ namespace grapefruit
     //! returns the top evented TD located at screen coord xe, ye, or NULL
     EventCB * TDrenderclickablezone (int xe, int ye);
 
+    // JDJDJDJD ce truc un poil bizarre doit disparaitre dans View::convert2Dto3D
     //! roughly converts (x,y) window-coordinate to (x,y,z) 3D space coordinates (with z undefined yet...)
     void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx = convert2Dto3Ddx, GLfloat &dy = convert2Dto3Ddy);
     

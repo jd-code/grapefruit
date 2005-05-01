@@ -184,7 +184,7 @@ void ViewOrtho::setsizes (GLint screen_x, GLint screen_y, GLsizei screen_w, GLsi
 	return;
     }
 
-    x = screen_x,  y = screen_y,  w = screen_w,  h = screen_h;
+    vx = screen_x,  vy = screen_y,  vw = screen_w,  vh = screen_h;
 
     GLdouble screen_ratio = (GLdouble)screen_w / (GLdouble)screen_h,
 	     scene_ratio = scene_w / scene_h;
@@ -210,7 +210,7 @@ void ViewOrtho::setsizes (GLint screen_x, GLint screen_y, GLsizei screen_w, GLsi
 
 void ViewOrtho::render (void)
 {
-    glViewport (x, y, w, h);
+    glViewport (vx, vy, vw, vh);
 
     glMatrixMode ( GL_PROJECTION ); // from grapefruit's redrawer
     glPushMatrix();                 // from grapefruit's redrawer
@@ -239,11 +239,11 @@ EventCB * ViewOrtho::renderclickablezone (int xe, int ye)
     glLoadIdentity ();
 
     GLfloat x, y, dx, dy;
-    convert2Dto3D (xe,ye , x,y , dx,dy);
+    ViewOrtho::convert2Dto3D (xe,ye , x,y , dx,dy);
 
-bzouzerr << " xe=" << xe << " ye=" << ye
-	 << "   x=" << x << " y=" << y << "   dx=" << dx << " dy=" << dy
-	 << endl;
+    //	bzouzerr << " xe=" << xe << " ye=" << ye
+    //		 << "   x=" << x << " y=" << y //<< "   dx=" << dx << " dy=" << dy
+    //		 << endl;
     
     glOrtho (x, x+dx, y, y+dy, near_val, far_val);         // we use an orthogonal projection
 
@@ -254,8 +254,6 @@ bzouzerr << " xe=" << xe << " ye=" << ye
     
     hits = glRenderMode (GL_RENDER);
 
-bzouzerr << "hits=" << hits << endl ;
-    
     if (hits == 0)
 	return NULL;
 
@@ -284,30 +282,11 @@ bzouzerr << "hits=" << hits << endl ;
 
 void ViewOrtho::convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx, GLfloat &dy)
 {
-    dx = (right-left)/w;
-    dy = (top-bottom)/h;
-     x = xe * dx + left;
-     y = top - ye * dy;	    // JDJDJDJD a approfondir !!!
-    
-    ////    double windows_h = (GLfloat) screen->h / (GLfloat) screen->w;
-
-    ////    if (windows_h > 1.0) {
-    ////        dx = 2.0 / (GLfloat) screen->w ;
-    ////        dy = -2.0 * windows_h / (GLfloat) screen->h ;
-
-    ////        // x = 2.0 * (GLfloat) xe / (GLfloat) screen->w - 1.0 ;
-    ////        // y = -2.0 * windows_h * (GLfloat) ye / (GLfloat) screen->h + windows_h ;
-    ////        x = (GLfloat) xe * dx - 1.0 ;
-    ////        y = (GLfloat) ye * dy + windows_h ;
-    ////    } else {
-    ////        windows_h = 1.0 / windows_h;
-    ////        dx = 2.0 * windows_h / (GLfloat) screen->w ;
-    ////        dy = -2.0 / (GLfloat) screen->h ;
-    ////        // x = 2.0 * windows_h * (GLfloat) xe / (GLfloat) screen->w - windows_h ;
-    ////        // y = -2.0 * (GLfloat) ye / (GLfloat) screen->h + 1.0 ;
-    ////        x = (GLfloat) xe * dx - windows_h ;
-    ////        y = (GLfloat) ye * dy + 1.0 ;
-    ////    }
+    dx = (right-left)/vw;
+    dy = (top-bottom)/vh;
+     x = (xe-vx) * dx + left;
+     ye = screen->h-ye;		    // JDJDJDJD cette conversion pourrait etre faite avant l'appel ?
+     y = (ye-vy) * dy + bottom;
 }
 
 // ------------------------- TDObj ----------------------------------------------------------------
@@ -641,6 +620,8 @@ void TDrender (void)
 	(*li)->render();
 }
 
+
+// JDJDJDJD a remplacer par celui de View
 
 // void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx = convert2Dto3Ddx, GLfloat &dy = convert2Dto3Ddy)
 void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx, GLfloat &dy)
