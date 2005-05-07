@@ -239,7 +239,7 @@ EventCB * ViewOrtho::renderclickablezone (int xe, int ye)
     glLoadIdentity ();
 
     GLfloat x, y, dx, dy;
-    ViewOrtho::convert2Dto3D (xe,ye , x,y , dx,dy);
+    convert2Dto3D (xe,ye , x,y , dx,dy);
 
     //	bzouzerr << " xe=" << xe << " ye=" << ye
     //		 << "   x=" << x << " y=" << y //<< "   dx=" << dx << " dy=" << dy
@@ -431,7 +431,8 @@ void TDObj::grabberchange (SDL_Event const & event)
     convert2Dto3D (0,0 , x,y , dx,dy);
     if (isgrabbable) {
 	pos.x += event.motion.xrel * dx;
-	pos.y += event.motion.yrel * dy;
+	// pos.y += event.motion.yrel * dy;
+	pos.y -= event.motion.yrel * dy;	    // JDJDJDJD faudrait vraiment clarifier ça
     }
 }
 
@@ -572,44 +573,6 @@ const string & TDCompound::gettdname (void)
 // ------------------------- global TDObj methods -------------------------------------------------
 // 
 
-////	void OldTDrender (void)
-////	{
-////	    Mvmt::hippity ();		// we take care of subscribed Mvmt
-////	
-////	    double windows_h = (GLfloat) screen->h / (GLfloat) screen->w;
-////	    glMatrixMode ( GL_PROJECTION ); // from grapefruit's redrawer
-////	    glPushMatrix();                 // from grapefruit's redrawer
-////	    glLoadIdentity ();              // from grapefruit's redrawer
-////	
-////	    if (windows_h > 1.0)                                            // the screen is taller than wide (??)
-////		glOrtho (-1.0, 1.0, -windows_h, windows_h, 15.0, 60.0);     // we use an adjusted orthogonal projection
-////		// glFrustum (-1.0, 1.0, -windows_h, windows_h, 5.0, 60.0);     // we use an adjusted orthogonal projection
-////	    else {                                                          // the screen is wider than tall
-////		windows_h = 1.0 / windows_h;
-////		//glOrtho (-windows_h, windows_h, -1.0, 1.0, 600.0, 0.0);     // we use an orthogonal projection
-////		glOrtho (-windows_h, windows_h, -1.0, 1.0, 15.0, 60.0);     // we use an orthogonal projection
-////		// glFrustum (-windows_h, windows_h, -1.0, 1.0, 5.0, 60.0);     // we use an orthogonal projection
-////	    }
-////	
-////	
-////	    glMatrixMode(GL_MODELVIEW);
-////	    glLoadIdentity ();              // from grapefruit's redrawer
-////	
-////	    list <TDObj *>::iterator li;
-////	    for (li=td_displayed.begin() ; li!=td_displayed.end() ; li++) {
-////		TDObj & td = **li;
-////		glPushMatrix ();
-////		glTranslatef (td.pos.x, td.pos.y, td.pos.z);
-////		glMultMatrixf (&td.rm.m[0][0]);
-////		glScalef (td.scale, td.scale, td.scale);
-////		td.render ();
-////		glPopMatrix ();
-////	    }
-////	
-////	    glPopMatrix ();                 // from grapefruit's redrawer
-////	}
-
-
 void TDrender (void)
 {
     Mvmt::hippity ();		// we take care of subscribed Mvmt
@@ -621,29 +584,12 @@ void TDrender (void)
 }
 
 
-// JDJDJDJD a remplacer par celui de View
-
-// void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx = convert2Dto3Ddx, GLfloat &dy = convert2Dto3Ddy)
 void convert2Dto3D (int xe, int ye, GLfloat &x, GLfloat &y, GLfloat &dx, GLfloat &dy)
 {
-    double windows_h = (GLfloat) screen->h / (GLfloat) screen->w;
 
-    if (windows_h > 1.0) {
-	dx = 2.0 / (GLfloat) screen->w ;
-	dy = -2.0 * windows_h / (GLfloat) screen->h ;
-
-	// x = 2.0 * (GLfloat) xe / (GLfloat) screen->w - 1.0 ;
-	// y = -2.0 * windows_h * (GLfloat) ye / (GLfloat) screen->h + windows_h ;
-	x = (GLfloat) xe * dx - 1.0 ;
-	y = (GLfloat) ye * dy + windows_h ;
-    } else {
-	windows_h = 1.0 / windows_h;
-	dx = 2.0 * windows_h / (GLfloat) screen->w ;
-	dy = -2.0 / (GLfloat) screen->h ;
-	// x = 2.0 * windows_h * (GLfloat) xe / (GLfloat) screen->w - windows_h ;
-	// y = -2.0 * (GLfloat) ye / (GLfloat) screen->h + 1.0 ;
-	x = (GLfloat) xe * dx - windows_h ;
-	y = (GLfloat) ye * dy + 1.0 ;
+    if (plastviewclicked != NULL) {
+	plastviewclicked->convert2Dto3D (xe, ye, x, y, dx, dy);
+	return;
     }
 }
 
@@ -655,9 +601,12 @@ EventCB * TDrenderclickablezone (int xe, int ye)
 
     for (li=view_evented.begin() ; li!=view_evented.end() ; li++) {
 	ev = (*li)->renderclickablezone (xe, ye);
-	if (ev != NULL)
+	if (ev != NULL) {
+	    plastviewclicked = *li;
 	    return (ev);
+	}
     }
+    plastviewclicked = NULL;
     return NULL;
 }
 
