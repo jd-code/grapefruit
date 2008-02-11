@@ -164,6 +164,8 @@ namespace grapefruit
 	friend class AgrumeStyle;
     };
 
+    PEventCB getcb (int x, int y);
+
 	// --------------- agrume related globals -------------------------------------
 
 #ifdef   AGRUME_H_GLOBINST
