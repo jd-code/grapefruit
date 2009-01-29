@@ -73,7 +73,7 @@ namespace grapefruit
 		li++;
 	    } else {
 		if (warnaboutmissingActions)
-		    bzouzerr << "warning: attempt to call a missing Action" << endl;
+		    bzouzerr << "warning: attempt to call a missing Action id=" << *li << " / " << Action::n_occur << "tot" << endl;
 		list<long>::iterator lj = li;
 		li++;
 		l.erase (lj);
@@ -113,7 +113,19 @@ namespace grapefruit
 
     bool GrapeKeyMapKey::trigger_action (SDL_Event const & event)
     {
-	{   map<Uint16, ActionPool>::iterator mi = map_unicode.find (event.key.keysym.unicode);
+	Uint16 unicode;
+    
+	// this one is needed for translating release key code that aren't unicoded
+	static map<SDLKey, Uint16> unicode_translate;
+
+	if (event.type == SDL_KEYDOWN) {
+	    unicode_translate [event.key.keysym.sym] = event.key.keysym.unicode;
+	    unicode = event.key.keysym.unicode;
+	} else if (event.type == SDL_KEYUP) {
+	    unicode = unicode_translate [event.key.keysym.sym];
+	}
+
+	{   map<Uint16, ActionPool>::iterator mi = map_unicode.find (unicode);
 	    if (mi!= map_unicode.end()) {
 		mi->second.doit();
 		return true;
