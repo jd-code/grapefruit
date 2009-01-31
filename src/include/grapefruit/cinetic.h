@@ -41,6 +41,7 @@ namespace grapefruit
 
 	public:
 	    ActionPool pa_finish;			    //!< the Action to be performed at finishing the Mvmt
+	    bool delete_after_finish;			    //!< shall the MVMT be deleted after finish
 
 	    virtual ~Mvmt (void);
 	    Mvmt (TDObj &td);				    //!< Mvmt shall not exist without being bound to a td

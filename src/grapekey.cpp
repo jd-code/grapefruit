@@ -60,23 +60,20 @@ namespace grapefruit
     void ActionPool::doit (void)
     {
 	  map<long, Action *>::iterator	mi,
-					me = Action::mactions.end();	// JDJDJDJD could be factorised
-		   list<long>::iterator	li = l.begin(),
+					me = Action::mactions.end();	// JDJDJDJD could be factorised ?
+		   list<long>::iterator	li,
 					le = l.end();
 
-	while (li!=le) {
+	for (li=l.begin() ; li != le ; li++) {
 	    mi = Action::mactions.find(*li);
 	    if (mi != me) {
 		if (debug_pool)
-		    bzouzerr << "about to perform (" << mi->second->getacname () << ", " << mi->second->handle << ")->doit()" << endl ;
+		    bzouzerr << "   about to perform (" << mi->second->getacname () << ", " << mi->second->handle << ")->doit()" << endl ;
 		mi->second->doit();
-		li++;
 	    } else {
 		if (warnaboutmissingActions)
 		    bzouzerr << "warning: attempt to call a missing Action id=" << *li << " / " << Action::n_occur << "tot" << endl;
-		list<long>::iterator lj = li;
-		li++;
-		l.erase (lj);
+		li = l.erase (li);
 	    }
 	}
     }
@@ -126,19 +123,19 @@ namespace grapefruit
 	}
 
 	{   map<Uint16, ActionPool>::iterator mi = map_unicode.find (unicode);
-	    if (mi!= map_unicode.end()) {
+	    if (mi != map_unicode.end()) {
 		mi->second.doit();
 		return true;
 	    }
 	}
 	{   map<SDLKey, ActionPool>::iterator mi = map_sdlkey.find (event.key.keysym.sym);
-	    if (mi!= map_sdlkey.end()) {
+	    if (mi != map_sdlkey.end()) {
 		mi->second.doit();
 		return true;
 	    }
 	}
 	{   map<Uint32, ActionPool>::iterator mi = map_sdlkeymod.find ((event.key.keysym.mod << 16) | event.key.keysym.sym);
-	    if (mi!= map_sdlkeymod.end()) {
+	    if (mi != map_sdlkeymod.end()) {
 		mi->second.doit();
 		return true;
 	    }
