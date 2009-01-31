@@ -10,6 +10,7 @@ namespace grapefruit
     {	
 	ptd = &td;
 	lmvmt_id = lmvmt_end;
+	delete_after_finish = false;
     }
     
     Mvmt::~Mvmt (void)
@@ -38,31 +39,34 @@ namespace grapefruit
 
     void Mvmt::hippity (void)
     {
-    // ----------------------------- taking care of subscribed Mvmt -------------------------------
+	// ----------------------------- taking care of subscribed Mvmt -------------------------------
 
-    while (!Mvmt::qfmvmt.empty()) {					// first we do the first-step of all Mvmt newly-inserted...
-	Mvmt &m = *Mvmt::qfmvmt.front();
-	m.firststep();
-	m.lasttime = Mvmt::curtime;					// before time is updated so that their curtime won't be late !
+	while (!Mvmt::qfmvmt.empty()) {					// first we do the first-step of all Mvmt newly-inserted...
+	    Mvmt &m = *Mvmt::qfmvmt.front();
+	    m.firststep();
+	    m.lasttime = Mvmt::curtime;					// before time is updated so that their curtime won't be late !
 
-	Mvmt::qfmvmt.pop();
-    }
-
-    Mvmt::curtime = SDL_GetTicks ();
-
-    {
-static queue<Mvmt*> qfinish;
-	LPMvmt::iterator lm;
-
-	for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt_end ; lm++) {	// first we step each of the subscribed Mvmt...
-	    if ((*lm)->step () == -1)					// if one finishes...
-		qfinish.push(*lm);					// we'll treat it afterward..
+	    Mvmt::qfmvmt.pop();
 	}
-	while (!qfinish.empty()) {					// AFTER having stepped ALL the Mvmt...
-	    qfinish.front()->finish();					// we finish the one that ended
-	    qfinish.pop();
+
+	Mvmt::curtime = SDL_GetTicks ();
+
+	{
+    static queue<Mvmt*> qfinish;
+	    LPMvmt::iterator lm;
+
+	    for (lm=Mvmt::lmvmt.begin() ; lm!=Mvmt::lmvmt_end ; lm++) {	// first we step each of the subscribed Mvmt...
+		if ((*lm)->step () == -1)					// if one finishes...
+		    qfinish.push(*lm);					// we'll treat it afterward..
+	    }
+	    while (!qfinish.empty()) {					// AFTER having stepped ALL the Mvmt...
+		Mvmt *pmvmt = qfinish.front();
+		pmvmt->finish();					// we finish the one that ended
+		if (pmvmt->delete_after_finish)
+		    delete (pmvmt);
+		qfinish.pop();
+	    }
 	}
-    }
     }
 
     // ----------------------------- Mv_Spin ------------------------------------------------------
