@@ -120,6 +120,9 @@ namespace grapefruit
 	    unicode = event.key.keysym.unicode;
 	} else if (event.type == SDL_KEYUP) {
 	    unicode = unicode_translate [event.key.keysym.sym];
+	} else {
+	    cerr << "ceci est un ajout de code recent pour comprendre pourquoi la variable unicode pouvait etre non-initialisee" << endl;
+	    return false;
 	}
 
 	{   map<Uint16, ActionPool>::iterator mi = map_unicode.find (unicode);

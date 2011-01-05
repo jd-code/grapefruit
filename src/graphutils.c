@@ -67,6 +67,7 @@ void SDLF_putpixel (SDL_Surface *surface, int x, int y, Uint32 pixel)	    // JDJ
     }
 }
 
+void rvline (SDL_Surface *Sdest, int x1, int y1, int x2, int y2, Uint32 pixel);
 void rvline (SDL_Surface *Sdest, int x1, int y1, int x2, int y2, Uint32 pixel)
 {
     if (y1 > y2) {
@@ -88,6 +89,7 @@ void rvline (SDL_Surface *Sdest, int x1, int y1, int x2, int y2, Uint32 pixel)
     }
 } 
 
+void rhline (SDL_Surface *Sdest, int x1, int y1, int x2, int y2, Uint32 pixel);
 void rhline (SDL_Surface *Sdest, int x1, int y1, int x2, int y2, Uint32 pixel)
 {
     if (x1 > x2) {
