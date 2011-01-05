@@ -67,7 +67,7 @@ AC_C_CONST
 
 dnl JD's standard minimum CFLAG
 dnl CHANGED for JD's ENterGroup default nasty warnings
-CFLAGS="$CFLAGS -O2 -Wall -Wcast-qual -Wwrite-strings"
+CFLAGS="$CFLAGS -O2 -Wall -Wcast-qual -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes"
 dnl CXXFLAGS="$CXXFLAGS -O2 -Wall -Woverloaded-virtual -Wcast-qual -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls -Winline"
 CXXFLAGS="$CXXFLAGS -O2 -Wall -Woverloaded-virtual -Wcast-qual -Wwrite-strings -Wredundant-decls"
 
