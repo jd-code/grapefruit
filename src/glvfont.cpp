@@ -304,7 +304,13 @@ bool  glvoff_isvalid = false;		    //!< are the offsets stored in glvxoff and gl
 
 void render_char_from_table (int c, double &xoff, double &yoff)
 {
-    GLMarks * p = (GLMarks *) (glfb [c]);   // JDJDJDJD some controls about overflow are missing here !
+    GLMarks * p;
+    if ((c>=0) || (c<256))
+	p = (GLMarks *) (glfb [c]);
+    else {
+	bzouzerr << " char " << c << " out of bound" << endl;
+	p = NULL;
+    }
 
     double  xstep = 0,
 	    ystep = 0,
@@ -410,7 +416,13 @@ void render_char_from_table (int c, double &xoff, double &yoff)
 
 void compute_char_size_from_table (int c, double &xoff, double &yoff)
 {
-    GLMarks * p = (GLMarks *) (glfb [c]);   // JDJDJDJD some controls about overflow are missing here !
+    GLMarks * p;
+    if ((c>=0) || (c<256))
+	p = (GLMarks *) (glfb [c]);
+    else {
+	bzouzerr << " char " << c << " out of bound" << endl;
+	p = NULL;
+    }
 
     double  xstep = 0,
 	    ystep = 0,
@@ -485,7 +497,7 @@ void compute_char_size_from_table (int c, double &xoff, double &yoff)
 		p++;
 		// glBegin (GL_LINE_STRIP);
 		while (*p >= 0) {
-		    glVertex2f (*p, *(p+1));
+		    // glVertex2f (*p, *(p+1));
 		    p += 2;
 		}
 		if (*p != END)
