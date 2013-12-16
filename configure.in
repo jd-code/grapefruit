@@ -122,6 +122,10 @@ case "$target" in
 esac
 AC_SUBST(MATHLIB)
 
+dnl add the prefix to include search
+CFLAGS="-I ${prefix}/include $CFLAGS"
+CXXFLAGS="-I ${prefix}/include $CXXFLAGS"
+
 
 dnl Check for SDL ---------------------------------------------------------------------------
 
